@@ -2,7 +2,7 @@
 export default {
   namespace: 'canvas',
   state: {
-    color: 'green',
+    image: null,
   },
   reducers: {
     stateWillUpdate(state, { payload }) {
