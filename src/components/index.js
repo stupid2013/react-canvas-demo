@@ -1,20 +1,28 @@
 import React from 'react';
 import { Icon } from 'antd';
 import { Stage, Layer } from 'react-konva';
+// import Konva from 'konva';
 import MainImage from './main-image';
+import Rectangle from './rectangle';
+import Text from './text';
 
 const Index = ({
   dispatch,
   image,
+  showRect,
 }) => {
+  const addRect = () => dispatch({
+    type: 'canvas/stateWillUpdate',
+    payload: {
+      showRect: true,
+    },
+  });
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '48px' }}>
       <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
-        <Icon type="plus-circle-o" />
-        <Icon type="minus-circle-o" />
-        <Icon type="file-add" />
-        <Icon type="edit" />
-        <Icon type="reload" />
+        <Icon type="file-add" onClick={addRect} style={{ cursor: 'pointer' }} />
+        <Icon type="edit" style={{ cursor: 'pointer' }} />
+        <Icon type="reload" style={{ cursor: 'pointer' }} />
       </div>
       <div style={{ border: '1px solid #eee' }}>
         <Stage width={800} height={600}>
@@ -23,6 +31,10 @@ const Index = ({
               dispatch={dispatch}
               image={image}
             />
+            {showRect &&
+              <Rectangle />
+            }
+            <Text />
           </Layer>
         </Stage>
       </div>

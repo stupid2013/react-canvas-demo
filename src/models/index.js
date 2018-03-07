@@ -3,6 +3,7 @@ export default {
   namespace: 'canvas',
   state: {
     image: null,
+    showRect: false,
   },
   reducers: {
     stateWillUpdate(state, { payload }) {

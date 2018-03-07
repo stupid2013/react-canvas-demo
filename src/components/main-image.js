@@ -1,10 +1,11 @@
 import React from 'react';
 import { Image } from 'react-konva';
 
+/* eslint no-undef: 0 */
 class MainImage extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
-    const img = new window.Image(); // eslint-disable-line no-undef
+    const img = new window.Image();
     /* eslint global-require: 0 */
     img.src = require('./test.png');
     // img.src = 'http://konvajs.github.io/assets/darth-vader.jpg';
@@ -20,7 +21,16 @@ class MainImage extends React.Component {
   render() {
     const { image } = this.props;
     return (
-      <Image image={image} />
+      <Image
+        image={image}
+        draggable
+        onMouseover={() => {
+          document.body.style.cursor = 'pointer';
+        }}
+        onMouseout={() => {
+          document.body.style.cursor = 'default';
+        }}
+      />
     );
   }
 }
