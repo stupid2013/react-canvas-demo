@@ -1,25 +1,24 @@
 
 export default {
-
   namespace: 'canvas',
-
-  state: {},
-
-  subscriptions: {
-    setup({ dispatch, history }) {  // eslint-disable-line
-    },
+  state: {
+    color: 'green',
   },
-
-  effects: {
-    *fetch({ payload }, { call, put }) {  // eslint-disable-line
-      yield put({ type: 'save' });
-    },
-  },
-
   reducers: {
-    save(state, action) {
-      return { ...state, ...action.payload };
+    stateWillUpdate(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
     },
   },
-
+  effects: {
+    // *fetch({ payload }, { call, put }) {  // eslint-disable-line
+    //   yield put({ type: 'save' });
+    // },
+  },
+  subscriptions: {
+    // setup({ dispatch, history }) {  // eslint-disable-line
+    // },
+  },
 };

@@ -16,7 +16,7 @@
     "konva": "^1.7.6",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
-    "react-konva": "^1.6.6"
+    "react-konva": "1.1.6"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
