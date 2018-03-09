@@ -5,7 +5,6 @@ import Konva from 'konva';
 /* eslint no-undef: 0 */
 class Note extends React.Component {
   componentDidMount() {
-    // console.log('====== ', this.refs.text);
   }
   handleLable = (content) => {
     if (content) {

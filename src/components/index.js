@@ -31,14 +31,14 @@ class Index extends React.Component {
       },
     });
   }
-  update = (activeAnchor) => {
+  update = (activeAnchor, shape) => {
     const group = activeAnchor.getParent();
 
     const topLeft = group.get('.topLeft')[0];
     const topRight = group.get('.topRight')[0];
     const bottomRight = group.get('.bottomRight')[0];
     const bottomLeft = group.get('.bottomLeft')[0];
-    const rect = group.get('Rect')[0];
+    const rect = group.get(`${shape}`)[0];
 
     const anchorX = activeAnchor.getX();
     const anchorY = activeAnchor.getY();
@@ -72,9 +72,14 @@ class Index extends React.Component {
     if (width && height) {
       rect.width(width);
       rect.height(height);
+      if (shape === 'Tag') {
+        const text = group.get('Text')[0];
+        text.width(width);
+        text.height(height);
+      }
     }
   }
-  addAnchor = (group, x, y, name) => {
+  addAnchor = (group, x, y, name, shape) => {
     const layer = group.getLayer();
 
     const anchor = new Konva.Circle({
@@ -90,7 +95,7 @@ class Index extends React.Component {
     });
 
     anchor.on('dragmove', () => {
-      this.update(anchor);
+      this.update(anchor, shape);
       layer.draw();
     });
     anchor.on('mousedown touchstart', () => {
@@ -136,10 +141,10 @@ class Index extends React.Component {
     });
     layerNode.add(rectGroup);
     rectGroup.add(rect);
-    this.addAnchor(rectGroup, 0, 0, 'topLeft');
-    this.addAnchor(rectGroup, 120, 0, 'topRight');
-    this.addAnchor(rectGroup, 120, 51, 'bottomRight');
-    this.addAnchor(rectGroup, 0, 51, 'bottomLeft');
+    this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
+    this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
+    this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
+    this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
 
     stageNode.add(layerNode);
   }
@@ -166,21 +171,47 @@ class Index extends React.Component {
   }
   addNote = () => {
     const { layerNode, stageNode } = this.props;
-    const text = new Konva.Text({
-      x: 50,
-      y: 50,
+    const tagNode = new Konva.Tag({
+      fill: 'black',
+      width: 120,
+      height: 50,
+      pointerWidth: 10,
+      pointerHeight: 10,
+      lineJoin: 'round',
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: 10,
+      shadowOpacity: 0.5,
+      opacity: 0.1,
+    });
+    const textNote = new Konva.Text({
       text: '双击以修改',
-      fontSize: 18,
+      width: tagNode.width(),
+      height: tagNode.height(),
+      fontSize: 16,
+      lineHeight: 1.2,
+      padding: 12,
       fill: 'red',
+    });
+
+    const noteGroup = new Konva.Group({
+      x: 120,
+      y: 50,
       draggable: true,
     });
-    layerNode.add(text);
-    layerNode.draw();
-    text.on('dblclick', () => {
-      // create textarea over canvas with absolute position
+    layerNode.add(noteGroup);
+    noteGroup.add(tagNode);
+    noteGroup.add(textNote);
+    this.addAnchor(noteGroup, 0, 0, 'topLeft', 'Tag');
+    this.addAnchor(noteGroup, 120, 0, 'topRight', 'Tag');
+    this.addAnchor(noteGroup, 120, 51, 'bottomRight', 'Tag');
+    this.addAnchor(noteGroup, 0, 51, 'bottomLeft', 'Tag');
 
+    stageNode.add(layerNode);
+    textNote.on('dblclick', () => {
+      // create textarea over canvas with absolute position
       // first we need to find its positon
-      const textPosition = text.getAbsolutePosition();
+      const textPosition = textNote.getAbsolutePosition();
       const stageBox = stageNode.getContainer().getBoundingClientRect();
 
       const areaPosition = {
@@ -188,23 +219,20 @@ class Index extends React.Component {
         y: textPosition.y + stageBox.top,
       };
 
-
       // create textarea and style it
       const textarea = document.createElement('textarea');
       document.body.appendChild(textarea);
 
-      textarea.value = text.text();
+      textarea.value = textNote.text();
       textarea.style.position = 'absolute';
       textarea.style.top = `${areaPosition.y}px`;
       textarea.style.left = `${areaPosition.x}px`;
-      textarea.style.width = text.width();
-
+      textarea.style.width = textNote.width();
       textarea.focus();
 
       textarea.addEventListener('keydown', (e) => {
-        // hide on enter
         if (e.keyCode === 13) {
-          text.text(textarea.value);
+          textNote.text(textarea.value);
           layerNode.draw();
           document.body.removeChild(textarea);
         }
