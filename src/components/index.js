@@ -74,6 +74,7 @@ class Index extends React.Component {
       rect.height(height);
       if (shape === 'Tag') {
         const text = group.get('Text')[0];
+        text.position(topLeft.position());
         text.width(width);
         text.height(height);
       }
