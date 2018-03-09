@@ -25,7 +25,7 @@ class MainImage extends React.Component {
         image={image}
         draggable
         onMouseover={() => {
-          document.body.style.cursor = 'pointer';
+          document.body.style.cursor = 'move';
         }}
         onMouseout={() => {
           document.body.style.cursor = 'default';
