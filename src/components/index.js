@@ -154,13 +154,13 @@ class Index extends React.Component {
     const arrow = new Konva.Arrow({
       x: stageNode.getWidth() / 4,
       y: stageNode.getHeight() / 4,
-      points: [0, 0, 30, 40],
+      points: [0, 0, 50, 80],
       pointerLength: 12,
-      pointerWidth: 12,
+      pointerWidth: 10,
       fill: 'red',
       stroke: 'red',
       draggable: true,
-      strokeWidth: 2,
+      strokeWidth: 3,
     });
 
     arrow.on('mouseover', () => {
