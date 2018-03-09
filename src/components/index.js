@@ -1,47 +1,42 @@
 import React from 'react';
-import { Icon } from 'antd';
 import { Stage, Layer } from 'react-konva';
-// import Konva from 'konva';
 import MainImage from './main-image';
 import Rectangle from './rectangle';
 import Note from './note';
+import Operations from './operations';
+// import MyRect from './myRect';
+// import Text from './text';
 
 /* eslint global-require: 0 */
-const Index = ({
-  dispatch,
-  image,
-  showRect,
-}) => {
-  const addRect = () => dispatch({
-    type: 'canvas/stateWillUpdate',
-    payload: {
-      showRect: true,
-    },
-  });
-  return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '48px' }}>
-      <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
-        <Icon type="file-add" onClick={addRect} style={{ cursor: 'pointer' }} />
-        <Icon type="arrow-down" style={{ cursor: 'pointer' }} />
-        <Icon type="edit" style={{ cursor: 'pointer' }} />
-        <Icon type="reload" style={{ cursor: 'pointer' }} />
-        <Icon type="delete" style={{ cursor: 'pointer' }} />
-      </div>
-      <div style={{ border: '1px solid #eee' }}>
-        <Stage width={800} height={600} style={{ background: `url(${require('./tb.png')})` }}>
-          <Layer>
-            <MainImage
-              dispatch={dispatch}
-              image={image}
-            />
-            {showRect &&
+class Index extends React.Component {
+  componentDidMount() {
+  }
+  render() {
+    const { dispatch, image } = this.props;
+    return (
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '48px' }}>
+        <Operations />
+        <div style={{ border: '1px solid #eee' }}>
+          <Stage
+            width={800}
+            height={600}
+            style={{ background: `url(${require('./images/tb.png')})` }}
+          >
+            <Layer name="image">
+              <MainImage
+                dispatch={dispatch}
+                image={image}
+              />
+            </Layer>
+            <Layer name="shapes">
               <Rectangle />
-            }
-            <Note />
-          </Layer>
-        </Stage>
+              <Note />
+            </Layer>
+          </Stage>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
+
 export default Index;

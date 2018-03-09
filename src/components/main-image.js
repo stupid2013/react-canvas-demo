@@ -7,7 +7,7 @@ class MainImage extends React.Component {
     const { dispatch } = this.props;
     const img = new window.Image();
     /* eslint global-require: 0 */
-    img.src = require('./test.png');
+    img.src = require('./images/test.png');
     // img.src = 'http://konvajs.github.io/assets/darth-vader.jpg';
     img.onload = () => {
       dispatch({
