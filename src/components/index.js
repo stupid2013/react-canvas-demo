@@ -120,65 +120,6 @@ class Index extends React.Component {
   addRect = () => {
     const { layerNode, stageNode } = this.props;
     const rect = new Konva.Rect({
-      x: 50,
-      y: 50,
-      width: 120,
-      height: 66,
-      stroke: 'red',
-      draggable: true,
-      cornerRadius: 6,
-      scaleX: 5,
-      scaleY: 3,
-    });
-
-    rect.on('mouseover', () => {
-      document.body.style.cursor = 'move';
-    });
-
-    layerNode.add(rect);
-    stageNode.add(layerNode);
-  }
-  addArrow = () => {
-    const { layerNode, stageNode } = this.props;
-    const arrow = new Konva.Arrow({
-      x: stageNode.getWidth() / 4,
-      y: stageNode.getHeight() / 4,
-      points: [0, 0, 30, 40],
-      pointerLength: 12,
-      pointerWidth: 12,
-      fill: 'red',
-      stroke: 'red',
-      draggable: true,
-      strokeWidth: 2,
-    });
-
-    arrow.on('mouseover', () => {
-      document.body.style.cursor = 'move';
-    });
-
-    layerNode.add(arrow);
-    stageNode.add(layerNode);
-  }
-  addNote = () => {
-    const { layerNode, stageNode } = this.props;
-    const text = new Konva.Text({
-      x: 20,
-      y: 60,
-      text: '双击以修改',
-      fontSize: 18,
-      fontFamily: 'Calibri',
-      fill: 'red',
-      width: 300,
-      padding: 20,
-      align: 'center',
-      draggable: true,
-    });
-    layerNode.add(text);
-    stageNode.add(layerNode);
-  }
-  testScale = () => {
-    const { layerNode, stageNode } = this.props;
-    const rect = new Konva.Rect({
       width: 200,
       height: 137,
       stroke: 'red',
@@ -202,6 +143,74 @@ class Index extends React.Component {
 
     stageNode.add(layerNode);
   }
+  addArrow = () => {
+    const { layerNode, stageNode } = this.props;
+    const arrow = new Konva.Arrow({
+      x: stageNode.getWidth() / 4,
+      y: stageNode.getHeight() / 4,
+      points: [0, 0, 30, 40],
+      pointerLength: 12,
+      pointerWidth: 12,
+      fill: 'red',
+      stroke: 'red',
+      draggable: true,
+      strokeWidth: 2,
+    });
+
+    arrow.on('mouseover', () => {
+      document.body.style.cursor = 'move';
+    });
+
+    layerNode.add(arrow);
+    layerNode.draw();
+  }
+  addNote = () => {
+    const { layerNode, stageNode } = this.props;
+    const text = new Konva.Text({
+      x: 50,
+      y: 50,
+      text: '双击以修改',
+      fontSize: 18,
+      fill: 'red',
+      draggable: true,
+    });
+    layerNode.add(text);
+    layerNode.draw();
+    text.on('dblclick', () => {
+      // create textarea over canvas with absolute position
+
+      // first we need to find its positon
+      const textPosition = text.getAbsolutePosition();
+      const stageBox = stageNode.getContainer().getBoundingClientRect();
+
+      const areaPosition = {
+        x: textPosition.x + stageBox.left,
+        y: textPosition.y + stageBox.top,
+      };
+
+
+      // create textarea and style it
+      const textarea = document.createElement('textarea');
+      document.body.appendChild(textarea);
+
+      textarea.value = text.text();
+      textarea.style.position = 'absolute';
+      textarea.style.top = `${areaPosition.y}px`;
+      textarea.style.left = `${areaPosition.x}px`;
+      textarea.style.width = text.width();
+
+      textarea.focus();
+
+      textarea.addEventListener('keydown', (e) => {
+        // hide on enter
+        if (e.keyCode === 13) {
+          text.text(textarea.value);
+          layerNode.draw();
+          document.body.removeChild(textarea);
+        }
+      });
+    });
+  }
   render() {
     const { dispatch, image } = this.props;
     return (
@@ -210,7 +219,7 @@ class Index extends React.Component {
           <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
           <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
           <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
-          <Icon type="reload" onClick={this.testScale} style={{ cursor: 'pointer' }} />
+          <Icon type="reload" style={{ cursor: 'pointer' }} />
           <Icon type="delete" style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>
