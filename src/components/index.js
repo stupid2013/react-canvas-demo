@@ -120,8 +120,8 @@ class Index extends React.Component {
   addRect = () => {
     const { layerNode, stageNode } = this.props;
     const rect = new Konva.Rect({
-      width: 200,
-      height: 137,
+      width: 120,
+      height: 50,
       stroke: 'red',
     });
 
@@ -137,9 +137,9 @@ class Index extends React.Component {
     layerNode.add(rectGroup);
     rectGroup.add(rect);
     this.addAnchor(rectGroup, 0, 0, 'topLeft');
-    this.addAnchor(rectGroup, 200, 0, 'topRight');
-    this.addAnchor(rectGroup, 200, 138, 'bottomRight');
-    this.addAnchor(rectGroup, 0, 138, 'bottomLeft');
+    this.addAnchor(rectGroup, 120, 0, 'topRight');
+    this.addAnchor(rectGroup, 120, 51, 'bottomRight');
+    this.addAnchor(rectGroup, 0, 51, 'bottomLeft');
 
     stageNode.add(layerNode);
   }
