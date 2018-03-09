@@ -3,6 +3,8 @@ export default {
   namespace: 'canvas',
   state: {
     image: null,
+    layerNode: null,
+    stageNode: null,
   },
   reducers: {
     stateWillUpdate(state, { payload }) {
