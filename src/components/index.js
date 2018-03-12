@@ -312,6 +312,11 @@ class Index extends React.Component {
       },
     });
   }
+  download = () => {
+    const canvas = document.getElementsByTagName('canvas')[0];
+    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+    window.location.href = image;
+  }
   render() {
     const { dispatch, image, currentShape } = this.props;
     return (
@@ -329,16 +334,17 @@ class Index extends React.Component {
             </Popconfirm> :
             <Icon type="delete" style={{ color: '#DDDEDD' }} />
           }
-          <Icon type="download" style={{ cursor: 'pointer' }} />
+          <Icon type="download" onClick={this.download} style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>
           <Stage
+            id="currentCanvas"
             ref={this.getStageInstance}
             width={800}
             height={600}
             style={{ background: `url(${require('./images/tb.png')})` }}
           >
-            <Layer name="image">
+            <Layer>
               <MainImage
                 dispatch={dispatch}
                 image={image}
