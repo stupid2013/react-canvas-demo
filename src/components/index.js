@@ -1,6 +1,6 @@
 import React from 'react';
 import Konva from 'konva';
-import { Icon } from 'antd';
+import { Icon, Popconfirm } from 'antd';
 import { Stage, Layer } from 'react-konva';
 import MainImage from './main-image';
 // import Rectangle from './rectangle';
@@ -11,8 +11,6 @@ import MainImage from './main-image';
 /* eslint no-undef: 0 */
 /* eslint global-require: 0 */
 class Index extends React.Component {
-  componentDidMount() {
-  }
   getStageInstance = (node) => {
     const { dispatch } = this.props;
     dispatch({
@@ -160,7 +158,6 @@ class Index extends React.Component {
     const rectGroup = new Konva.Group({
       x: 120,
       y: 50,
-      // name: `rect${Math.ceil(Math.random() * 200)}`,
       draggable: true,
     });
     layerNode.add(rectGroup);
@@ -316,15 +313,22 @@ class Index extends React.Component {
     });
   }
   render() {
-    const { dispatch, image } = this.props;
+    const { dispatch, image, currentShape } = this.props;
     return (
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '48px' }}>
         <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
           <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
           <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
           <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
-          <Icon type="reload" onClick={this.clearLayer} style={{ cursor: 'pointer' }} />
-          <Icon type="delete" onClick={this.deleteCurrent} style={{ cursor: 'pointer' }} />
+          <Popconfirm title="确认清空？" onConfirm={this.clearLayer} okText="确认" cancelText="取消">
+            <Icon type="reload" style={{ cursor: 'pointer' }} />
+          </Popconfirm>
+          { currentShape !== null ?
+            <Popconfirm title="确认删除？" onConfirm={this.deleteCurrent} okText="确认" cancelText="取消">
+              <Icon type="delete" style={{ cursor: 'pointer' }} />
+            </Popconfirm> :
+            <Icon type="delete" style={{ color: '#DDDEDD' }} />
+          }
           <Icon type="download" style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>

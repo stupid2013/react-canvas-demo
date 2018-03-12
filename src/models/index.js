@@ -4,6 +4,7 @@ export default {
   state: {
     image: null,
     layerNode: null,
+    layerNodeChildren: [],
     stageNode: null,
     currentShape: null,
   },
