@@ -31,14 +31,16 @@ class Index extends React.Component {
       },
     });
   }
-  update = (activeAnchor, shape) => {
+  update = (activeAnchor, shap) => {
     const group = activeAnchor.getParent();
 
     const topLeft = group.get('.topLeft')[0];
     const topRight = group.get('.topRight')[0];
     const bottomRight = group.get('.bottomRight')[0];
     const bottomLeft = group.get('.bottomLeft')[0];
-    const rect = group.get(`${shape}`)[0];
+    const arrowLeft = group.get('.arrowLeft')[0];
+    const arrowRight = group.get('.arrowRight')[0];
+    const shape = group.get(`${shap}`)[0];
 
     const anchorX = activeAnchor.getX();
     const anchorY = activeAnchor.getY();
@@ -61,22 +63,36 @@ class Index extends React.Component {
         bottomRight.setY(anchorY);
         topLeft.setX(anchorX);
         break;
+      case 'arrowLeft':
+        arrowLeft.setX(anchorX);
+        arrowLeft.setY(anchorY);
+        shape.attrs.points = [anchorX, anchorY, arrowRight.getX(), arrowRight.getY()];
+        break;
+      case 'arrowRight':
+        arrowRight.setX(anchorX);
+        arrowRight.setY(anchorY);
+        shape.attrs.points = [arrowLeft.getX(), arrowLeft.getY(), anchorX, anchorY];
+        break;
       default:
         break;
     }
 
-    rect.position(topLeft.position());
+    if (shap !== 'Arrow') {
+      shape.position(topLeft.position());
+    }
 
-    const width = topRight.getX() - topLeft.getX();
-    const height = bottomLeft.getY() - topLeft.getY();
-    if (width && height) {
-      rect.width(width);
-      rect.height(height);
-      if (shape === 'Tag') {
-        const text = group.get('Text')[0];
-        text.position(topLeft.position());
-        text.width(width);
-        text.height(height);
+    if (shap !== 'Arrow') { // 矩形的时候scale
+      const width = topRight.getX() - topLeft.getX();
+      const height = bottomLeft.getY() - topLeft.getY();
+      if (width && height) {
+        shape.width(width);
+        shape.height(height);
+        if (shap === 'Tag') {
+          const text = group.get('Text')[0];
+          text.position(topLeft.position());
+          text.width(width);
+          text.height(height);
+        }
       }
     }
   }
@@ -152,14 +168,11 @@ class Index extends React.Component {
   addArrow = () => {
     const { layerNode, stageNode } = this.props;
     const arrow = new Konva.Arrow({
-      x: stageNode.getWidth() / 4,
-      y: stageNode.getHeight() / 4,
       points: [0, 0, 50, 80],
       pointerLength: 12,
       pointerWidth: 10,
       fill: 'red',
       stroke: 'red',
-      draggable: true,
       strokeWidth: 3,
     });
 
@@ -167,8 +180,16 @@ class Index extends React.Component {
       document.body.style.cursor = 'move';
     });
 
-    layerNode.add(arrow);
-    layerNode.draw();
+    const arrowGroup = new Konva.Group({
+      x: 20,
+      y: 20,
+      draggable: true,
+    });
+    layerNode.add(arrowGroup);
+    arrowGroup.add(arrow);
+    this.addAnchor(arrowGroup, 0, 0, 'arrowLeft', 'Arrow');
+    this.addAnchor(arrowGroup, 55, 88, 'arrowRight', 'Arrow');
+    stageNode.add(layerNode);
   }
   addNote = () => {
     const { layerNode, stageNode } = this.props;
