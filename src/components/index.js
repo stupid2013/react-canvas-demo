@@ -255,7 +255,7 @@ class Index extends React.Component {
       dispatch({
         type: 'canvas/stateWillUpdate',
         payload: {
-          currentShape: e.target,
+          currentShape: e.target.parent,
         },
       });
     });
