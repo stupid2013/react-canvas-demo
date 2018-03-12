@@ -344,13 +344,12 @@ class Index extends React.Component {
             height={600}
             style={{ background: `url(${require('./images/tb.png')})` }}
           >
-            <Layer>
+            <Layer ref={this.getLayerInstance} name="shapes">
               <MainImage
                 dispatch={dispatch}
                 image={image}
               />
             </Layer>
-            <Layer ref={this.getLayerInstance} name="shapes" />
           </Stage>
         </div>
       </div>
