@@ -66,12 +66,16 @@ class Index extends React.Component {
       case 'arrowLeft':
         arrowLeft.setX(anchorX);
         arrowLeft.setY(anchorY);
-        shape.attrs.points = [anchorX, anchorY, arrowRight.getX(), arrowRight.getY()];
+        shape.setAttrs({
+          points: [anchorX, anchorY, arrowRight.getX(), arrowRight.getY()],
+        });
         break;
       case 'arrowRight':
         arrowRight.setX(anchorX);
         arrowRight.setY(anchorY);
-        shape.attrs.points = [arrowLeft.getX(), arrowLeft.getY(), anchorX, anchorY];
+        shape.setAttrs({
+          points: [arrowLeft.getX(), arrowLeft.getY(), anchorX, anchorY],
+        });
         break;
       default:
         break;
@@ -102,10 +106,10 @@ class Index extends React.Component {
     const anchor = new Konva.Circle({
       x,
       y,
-      stroke: '#666',
-      fill: '#ddd',
-      strokeWidth: 1,
-      radius: 5,
+      stroke: 'transparent',
+      fill: 'transparent',
+      strokeWidth: 3,
+      radius: 6,
       name,
       draggable: true,
       dragOnTop: false,
@@ -127,13 +131,19 @@ class Index extends React.Component {
     anchor.on('mouseover', () => {
       const layer1 = anchor.getLayer();
       document.body.style.cursor = 'pointer';
-      anchor.setStrokeWidth(3);
+      anchor.setAttrs({
+        stroke: '#666',
+        fill: '#ddd',
+      });
       layer1.draw();
     });
     anchor.on('mouseout', () => {
       const layer2 = anchor.getLayer();
       document.body.style.cursor = 'default';
-      anchor.setStrokeWidth(2);
+      anchor.setAttrs({
+        stroke: 'transparent',
+        fill: 'transparent',
+      });
       layer2.draw();
     });
 
@@ -147,10 +157,6 @@ class Index extends React.Component {
       stroke: 'red',
     });
 
-    rect.on('mouseover', () => {
-      document.body.style.cursor = 'move';
-    });
-
     const rectGroup = new Konva.Group({
       x: 120,
       y: 50,
@@ -158,6 +164,10 @@ class Index extends React.Component {
     });
     layerNode.add(rectGroup);
     rectGroup.add(rect);
+    rectGroup.on('mouseover', () => {
+      document.body.style.cursor = 'crosshair';
+    });
+
     this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
     this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
     this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
@@ -176,14 +186,13 @@ class Index extends React.Component {
       strokeWidth: 3,
     });
 
-    arrow.on('mouseover', () => {
-      document.body.style.cursor = 'move';
-    });
-
     const arrowGroup = new Konva.Group({
       x: 20,
       y: 20,
       draggable: true,
+    });
+    arrowGroup.on('mouseover', () => {
+      document.body.style.cursor = 'crosshair';
     });
     layerNode.add(arrowGroup);
     arrowGroup.add(arrow);
@@ -224,6 +233,9 @@ class Index extends React.Component {
     layerNode.add(noteGroup);
     noteGroup.add(tagNode);
     noteGroup.add(textNote);
+    noteGroup.on('mouseover', () => {
+      document.body.style.cursor = 'crosshair';
+    });
     this.addAnchor(noteGroup, 0, 0, 'topLeft', 'Tag');
     this.addAnchor(noteGroup, 120, 0, 'topRight', 'Tag');
     this.addAnchor(noteGroup, 120, 51, 'bottomRight', 'Tag');
@@ -261,6 +273,11 @@ class Index extends React.Component {
       });
     });
   }
+  clearLayer = () => {
+    const { layerNode } = this.props;
+    layerNode.destroyChildren();
+    layerNode.draw();
+  }
   render() {
     const { dispatch, image } = this.props;
     return (
@@ -269,8 +286,9 @@ class Index extends React.Component {
           <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
           <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
           <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
-          <Icon type="reload" style={{ cursor: 'pointer' }} />
+          <Icon type="reload" onClick={this.clearLayer} style={{ cursor: 'pointer' }} />
           <Icon type="delete" style={{ cursor: 'pointer' }} />
+          <Icon type="download" style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>
           <Stage
