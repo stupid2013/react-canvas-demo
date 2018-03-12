@@ -150,7 +150,7 @@ class Index extends React.Component {
     group.add(anchor);
   }
   addRect = () => {
-    const { layerNode, stageNode } = this.props;
+    const { layerNode, stageNode, dispatch } = this.props;
     const rect = new Konva.Rect({
       width: 120,
       height: 50,
@@ -160,12 +160,22 @@ class Index extends React.Component {
     const rectGroup = new Konva.Group({
       x: 120,
       y: 50,
+      // name: `rect${Math.ceil(Math.random() * 200)}`,
       draggable: true,
     });
     layerNode.add(rectGroup);
     rectGroup.add(rect);
     rectGroup.on('mouseover', () => {
       document.body.style.cursor = 'crosshair';
+    });
+
+    rectGroup.on('click', (e) => {
+      dispatch({
+        type: 'canvas/stateWillUpdate',
+        payload: {
+          currentShape: e.target,
+        },
+      });
     });
 
     this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
@@ -176,7 +186,7 @@ class Index extends React.Component {
     stageNode.add(layerNode);
   }
   addArrow = () => {
-    const { layerNode, stageNode } = this.props;
+    const { layerNode, stageNode, dispatch } = this.props;
     const arrow = new Konva.Arrow({
       points: [0, 0, 50, 80],
       pointerLength: 12,
@@ -196,12 +206,20 @@ class Index extends React.Component {
     });
     layerNode.add(arrowGroup);
     arrowGroup.add(arrow);
+    arrowGroup.on('click', (e) => {
+      dispatch({
+        type: 'canvas/stateWillUpdate',
+        payload: {
+          currentShape: e.target,
+        },
+      });
+    });
     this.addAnchor(arrowGroup, 0, 0, 'arrowLeft', 'Arrow');
     this.addAnchor(arrowGroup, 55, 88, 'arrowRight', 'Arrow');
     stageNode.add(layerNode);
   }
   addNote = () => {
-    const { layerNode, stageNode } = this.props;
+    const { layerNode, stageNode, dispatch } = this.props;
     const tagNode = new Konva.Tag({
       fill: 'black',
       width: 120,
@@ -235,6 +253,14 @@ class Index extends React.Component {
     noteGroup.add(textNote);
     noteGroup.on('mouseover', () => {
       document.body.style.cursor = 'crosshair';
+    });
+    noteGroup.on('click', (e) => {
+      dispatch({
+        type: 'canvas/stateWillUpdate',
+        payload: {
+          currentShape: e.target,
+        },
+      });
     });
     this.addAnchor(noteGroup, 0, 0, 'topLeft', 'Tag');
     this.addAnchor(noteGroup, 120, 0, 'topRight', 'Tag');
@@ -278,6 +304,17 @@ class Index extends React.Component {
     layerNode.destroyChildren();
     layerNode.draw();
   }
+  deleteCurrent = () => {
+    const { layerNode, currentShape, dispatch } = this.props;
+    currentShape.destroy();
+    layerNode.draw();
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        currentShape: null,
+      },
+    });
+  }
   render() {
     const { dispatch, image } = this.props;
     return (
@@ -287,7 +324,7 @@ class Index extends React.Component {
           <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
           <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
           <Icon type="reload" onClick={this.clearLayer} style={{ cursor: 'pointer' }} />
-          <Icon type="delete" style={{ cursor: 'pointer' }} />
+          <Icon type="delete" onClick={this.deleteCurrent} style={{ cursor: 'pointer' }} />
           <Icon type="download" style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>
