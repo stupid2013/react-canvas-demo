@@ -1,0 +1,44 @@
+
+.container {
+  background: #EFF1F5;
+}
+
+.container header {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background: #fff;
+  padding-left: 20px;
+}
+
+.container header h2 {
+  font-weight: 400;
+  margin: 0;
+}
+
+.content {
+  padding: 20px;
+}
+
+.wrapper1 {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.wrapper2 {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.wrapper2 h2 {
+  font-weight: 400;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
