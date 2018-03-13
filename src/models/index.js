@@ -6,6 +6,8 @@ export default {
     layerNode: null,
     stageNode: null,
     currentShape: null,
+    imageHeight: 0,
+    imageNode: null,
   },
   reducers: {
     stateWillUpdate(state, { payload }) {

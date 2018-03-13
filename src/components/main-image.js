@@ -10,25 +10,45 @@ class MainImage extends React.Component {
     img.src = require('./images/test.png');
     // img.src = 'http://konvajs.github.io/assets/darth-vader.jpg';
     img.onload = () => {
+      const imageHeight = Math.round((img.height * 960) / img.width);
       dispatch({
         type: 'canvas/stateWillUpdate',
         payload: {
           image: img,
+          imageHeight,
         },
       });
     };
   }
+  getImageInstance = (node) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        imageNode: node,
+      },
+    });
+  }
   render() {
-    const { image } = this.props;
+    const { image, imageHeight, imageNode } = this.props;
     return (
       <Image
         image={image}
         draggable
+        width={960}
+        height={imageHeight}
         onMouseover={() => {
           document.body.style.cursor = 'move';
         }}
         onMouseout={() => {
           document.body.style.cursor = 'default';
+        }}
+        ref={this.getImageInstance}
+        dragBoundFunc={(pos) => {
+          return {
+            x: imageNode.getAbsolutePosition().x,
+            y: pos.y,
+          };
         }}
       />
     );

@@ -298,7 +298,10 @@ class Index extends React.Component {
   }
   clearLayer = () => {
     const { layerNode } = this.props;
-    layerNode.destroyChildren();
+    const groups = layerNode.getChildren(node => (
+      node.getClassName() === 'Group'
+    ));
+    groups.destroy();
     layerNode.draw();
   }
   deleteCurrent = () => {
@@ -318,9 +321,9 @@ class Index extends React.Component {
     window.location.href = image;
   }
   render() {
-    const { dispatch, image, currentShape } = this.props;
+    const { dispatch, image, currentShape, imageHeight, imageNode } = this.props;
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '48px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
         <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
           <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
           <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
@@ -340,14 +343,16 @@ class Index extends React.Component {
           <Stage
             id="currentCanvas"
             ref={this.getStageInstance}
-            width={800}
-            height={600}
+            width={960}
+            height={680}
             style={{ background: `url(${require('./images/tb.png')})` }}
           >
             <Layer ref={this.getLayerInstance} name="shapes">
               <MainImage
                 dispatch={dispatch}
                 image={image}
+                imageHeight={imageHeight}
+                imageNode={imageNode}
               />
             </Layer>
           </Stage>
