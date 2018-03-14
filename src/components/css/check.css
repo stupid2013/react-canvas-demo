@@ -1,0 +1,34 @@
+.wrapper {
+  margin: 20px;
+}
+
+.wrapper header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.wrapper header h2 {
+  font-weight: 400;
+}
+
+.wrapper header h2 a {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.content {
+  background: #fff;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.imgWrapper {
+  width: 100%;
+  height: 600px;
+  overflow: scroll;
+  margin-top: 16px;
+  border: 1px solid #ddd;
+}
