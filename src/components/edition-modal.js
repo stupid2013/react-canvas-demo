@@ -70,6 +70,11 @@ export default ({
             违法证据的图片
           </div>
         </FormItem>
+        <FormItem {...formItemLayout} label="原始图片" colon>
+          <div>
+            原始图片
+          </div>
+        </FormItem>
         <FormItem {...formItemLayout} label="违反法规" colon>
           <div style={styles}>
             <ul>

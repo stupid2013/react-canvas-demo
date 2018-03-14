@@ -11,13 +11,14 @@ export default {
     date: '',
     type: '',
     visible: false,
+    showType: '',
     list: [
       {
         id: 1,
         keyword: '无毒副作用；延缓衰老；专治；抗癌',
         createTime: '2016-09-21 08:50:08',
         url: 'https://www.taobao.com',
-        status: '未审查',
+        status: '已审查',
         user: '王大雷',
         pic: '',
       },
@@ -78,7 +79,25 @@ export default {
     // },
   },
   subscriptions: {
-    // setup({ dispatch, history }) {  // eslint-disable-line
-    // },
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/check/show') {
+          dispatch({
+            type: 'stateWillUpdate',
+            payload: {
+              showType: 'show',
+            },
+          });
+        }
+        if (pathname === '/check/check') {
+          dispatch({
+            type: 'stateWillUpdate',
+            payload: {
+              showType: 'check',
+            },
+          });
+        }
+      });
+    },
   },
 };

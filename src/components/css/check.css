@@ -21,8 +21,6 @@
   border-radius: 5px;
   margin: 20px;
   padding: 20px;
-  display: flex;
-  justify-content: space-between;
 }
 
 .imgWrapper {
@@ -35,4 +33,14 @@
 
 .imgWrapper img {
   width: 100%;
+}
+
+.section {
+
+}
+
+.section h2 {
+  font-weight: 400;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }

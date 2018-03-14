@@ -39,7 +39,10 @@ export default ({
       message.error('请先选择监测时间和经济主体！');
     }
   };
-  const handleCheck = () => hashHistory.push('/check');
+  const handleCheck = typ => (e) => {
+    e.preventDefault();
+    hashHistory.push(`/check/${typ}`);
+  };
   const columns = [
     {
       title: '关键信息',
@@ -70,7 +73,13 @@ export default ({
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: () => (<a onClick={handleCheck}>审查</a>),
+      render: (text, record) => {
+        if (record.status === '未审查') {
+          return (<a onClick={handleCheck('check')}>审查</a>);
+        } else {
+          return (<a onClick={handleCheck('show')}>查看</a>);
+        }
+      },
     },
   ];
   return (
