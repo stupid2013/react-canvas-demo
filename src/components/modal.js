@@ -9,12 +9,14 @@ import MainImage from './main-image';
 class EvidenceModal extends React.Component {
   getStageInstance = (node) => {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'canvas/stateWillUpdate',
-      payload: {
-        stageNode: node.getStage(),
-      },
-    });
+    if (node) {
+      dispatch({
+        type: 'canvas/stateWillUpdate',
+        payload: {
+          stageNode: node.getStage(),
+        },
+      });
+    }
   }
   getLayerInstance = (node) => {
     const { dispatch } = this.props;
@@ -280,6 +282,7 @@ class EvidenceModal extends React.Component {
       textarea.style.position = 'absolute';
       textarea.style.top = `${areaPosition.y}px`;
       textarea.style.left = `${areaPosition.x}px`;
+      textarea.style.zIndex = '1000';
       textarea.style.width = textNote.width();
       textarea.focus();
 
@@ -316,16 +319,37 @@ class EvidenceModal extends React.Component {
     const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
     window.location.href = image;
   }
-  handleOk = () => {}
-  handleCancel = () => {}
+  handleOk = dispatch => (e) => {
+    e.preventDefault();
+    const canvas = document.getElementsByTagName('canvas')[0];
+    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        showModal: false,
+        imgBase64: image,
+      },
+    });
+  }
+  handleCancel = dispatch => (e) => {
+    e.preventDefault();
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        showModal: false,
+      },
+    });
+  }
   render() {
     const { dispatch, image, currentShape, imageHeight, imageNode } = this.props;
     return (
       <Modal
         title="证据框选"
         visible
-        onOk={this.handleOk}
-        onCancel={this.handleCancel}
+        maskClosable={false}
+        width={1080}
+        onOk={this.handleOk(dispatch)}
+        onCancel={this.handleCancel(dispatch)}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
           <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
@@ -341,7 +365,6 @@ class EvidenceModal extends React.Component {
               </Popconfirm> :
               <Icon type="delete" style={{ color: '#DDDEDD' }} />
             }
-            <Icon type="download" onClick={this.download} style={{ cursor: 'pointer' }} />
           </div>
           <div style={{ border: '1px solid #eee' }}>
             <Stage

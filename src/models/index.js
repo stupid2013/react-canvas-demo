@@ -40,7 +40,29 @@ export default {
         pic: '',
       },
     ],
-    editions: [],
+    editions: [
+      {
+        id: 1,
+        name: '测试广告1',
+        category: '生活用品1',
+        level: '严重违法',
+      },
+      {
+        id: 2,
+        name: '测试广告2',
+        category: '生活用品2',
+        level: '严重违法',
+      },
+      {
+        id: 3,
+        name: '测试广告3',
+        category: '生活用品3',
+        level: '严重违法',
+      },
+    ],
+    showModal: false,
+    showEdition: false,
+    imgBase64: '',
   },
   reducers: {
     stateWillUpdate(state, { payload }) {

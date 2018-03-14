@@ -1,8 +1,10 @@
 import React from 'react';
-import { Icon, Button, Tabs, Input, Table, Form } from 'antd';
+import { Icon, Button, Tabs, Input, Table, Form, message } from 'antd';
 import { hashHistory } from 'react-router';
 
 import styles from './css/check.css';
+import CanvasModal from './modal';
+import EditionModal from './edition-modal';
 
 const { TabPane } = Tabs;
 const { Search } = Input;
@@ -12,9 +14,38 @@ const FormItem = Form.Item;
 export default Form.create()(({
   editions,
   form,
+  showModal,
+  dispatch,
+  layerNode,
+  stageNode,
+  image,
+  currentShape,
+  imageHeight,
+  imageNode,
+  imgBase64,
+  showEdition,
 }) => {
   const { getFieldDecorator } = form;
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        message.success(values.product);
+      }
+    });
+  };
+  const show = () => dispatch({
+    type: 'canvas/stateWillUpdate',
+    payload: {
+      showModal: true,
+    },
+  });
+  const handleShow = () => dispatch({
+    type: 'canvas/stateWillUpdate',
+    payload: {
+      showEdition: true,
+    },
+  });
   const columns = [
     {
       title: '广告名称',
@@ -35,7 +66,7 @@ export default Form.create()(({
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: () => (<a>查看</a>),
+      render: () => (<a onClick={handleShow}>查看</a>),
     },
   ];
   const formItemLayout = {
@@ -67,9 +98,13 @@ export default Form.create()(({
       </header>
       <div className={styles.content}>
         <div style={{ width: '49%' }}>
-          <div style={{ textAlign: 'right' }}><Button type="primary">证据框选</Button></div>
+          <div style={{ textAlign: 'right' }}><Button onClick={show} type="primary">证据框选</Button></div>
           <div className={styles.imgWrapper}>
-            <img alt="pic" src={require('./images/test.png')} />
+            {imgBase64 ?
+              <img alt="pic" src={imgBase64} />
+              :
+              <img alt="pic" src={require('./images/test.png')} />
+            }
           </div>
         </div>
         <div style={{ width: '49%' }}>
@@ -80,6 +115,7 @@ export default Form.create()(({
                 bordered
                 columns={columns}
                 dataSource={editions}
+                rowKey={record => record.id}
               />
             </TabPane>
             <TabPane tab="新建广告版本" key="2">
@@ -88,27 +124,13 @@ export default Form.create()(({
                   {...formItemLayout}
                   label="发布平台"
                 >
-                  {getFieldDecorator('platform', {
-                    rules: [{
-                      type: 'email', message: 'The input is not valid E-mail!',
-                    }, {
-                      required: true, message: 'Please input your E-mail!',
-                    }],
-                  })(
-                    <Input />,
-                  )}
+                  <span>天猫</span>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
                   label="页面网址"
                 >
-                  {getFieldDecorator('url', {
-                    rules: [{
-                      required: true, message: 'Please input your password!',
-                    }],
-                  })(
-                    <Input type="password" />,
-                  )}
+                  <span>https://www.tmall.com</span>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -116,10 +138,10 @@ export default Form.create()(({
                 >
                   {getFieldDecorator('product', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '请输入产品名称',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input type="text" />,
                   )}
                 </FormItem>
                 <FormItem
@@ -128,10 +150,10 @@ export default Form.create()(({
                 >
                   {getFieldDecorator('advertiser', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '请输入广告主',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input type="text" />,
                   )}
                 </FormItem>
                 <FormItem
@@ -140,10 +162,10 @@ export default Form.create()(({
                 >
                   {getFieldDecorator('category', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '请选择广告类别',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input type="text" />,
                   )}
                 </FormItem>
                 <FormItem
@@ -152,23 +174,26 @@ export default Form.create()(({
                 >
                   {getFieldDecorator('laws', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '请选择违法法规',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input type="text" />,
                   )}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
                   label="违法明细"
                 >
-                  {getFieldDecorator('lawitems', {
-                    rules: [{
-                      required: true, message: 'Please confirm your password!',
-                    }],
-                  })(
-                    <Input type="password" />,
-                  )}
+                  <ul>
+                    <li>
+                      <p>违法条例1</p>
+                      <p><span style={{ color: 'red', marginRight: '10px' }}>*</span><span style={{ color: 'red' }}>违法了违法了，就是，违法了。</span></p>
+                    </li>
+                    <li>
+                      <p>违法条例2</p>
+                      <p><span style={{ color: 'red', marginRight: '10px' }}>*</span><span style={{ color: 'red' }}>违法了违法了，就是，违法了。</span></p>
+                    </li>
+                  </ul>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -176,10 +201,10 @@ export default Form.create()(({
                 >
                   {getFieldDecorator('remark', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '请添加备注',
                     }],
                   })(
-                    <Input type="password" />,
+                    <Input type="textarea" rows={3} />,
                   )}
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
@@ -191,6 +216,26 @@ export default Form.create()(({
           </Tabs>
         </div>
       </div>
+      <div style={{ textAlign: 'center' }}>
+        <Button onClick={() => (hashHistory.push('/'))} type="primary" style={{ marginRight: '16px' }}>该页面无违法广告</Button>
+        <Button onClick={() => (hashHistory.push('/'))} type="primary">完成审核</Button>
+      </div>
+      {showModal &&
+        <CanvasModal
+          dispatch={dispatch}
+          layerNode={layerNode}
+          stageNode={stageNode}
+          image={image}
+          currentShape={currentShape}
+          imageHeight={imageHeight}
+          imageNode={imageNode}
+        />
+      }
+      {showEdition &&
+        <EditionModal
+          dispatch={dispatch}
+        />
+      }
     </div>
   );
 });
