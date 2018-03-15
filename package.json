@@ -16,6 +16,7 @@
     "dva": "^1.2.1",
     "dva-loading": "^1.0.4",
     "konva": "^1.7.6",
+    "moment": "^2.21.0",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "react-konva": "1.1.6"

@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { hashHistory } from 'react-router';
 import { Row, Col, Select, Button, DatePicker, Table, Input, message } from 'antd';
 
@@ -28,7 +29,7 @@ export default ({
     },
   });
   const check = () => {
-    if (date !== '' && type !== '') {
+    if (type !== '') {
       dispatch({
         type: 'canvas/stateWillUpdate',
         payload: {
@@ -36,7 +37,7 @@ export default ({
         },
       });
     } else {
-      message.error('请先选择监测时间和经济主体！');
+      message.error('请选择监测经济主体！');
     }
   };
   const handleCheck = typ => (e) => {
@@ -92,11 +93,11 @@ export default ({
           <Row gutter={16} className={styles.rowStyle}>
             <Col span={2} style={{ textAlign: 'right' }}>监测日期: </Col>
             <Col span={4}>
-              <DatePicker disabledDate={disabledDate} onChange={onChange} style={{ width: '100%' }} />
+              <DatePicker value={moment(date)} disabledDate={disabledDate} onChange={onChange} style={{ width: '100%' }} />
             </Col>
             <Col span={2} style={{ textAlign: 'right' }}>监测经济主体: </Col>
             <Col span={4}>
-              <Select onChange={change} style={{ width: '100%' }} placeholder="请选择...">
+              <Select value={`${type}`} onChange={change} style={{ width: '100%' }} placeholder="请选择...">
                 <Option value="京东">京东</Option>
                 <Option value="淘宝">淘宝</Option>
                 <Option value="天猫">天猫</Option>
@@ -109,7 +110,7 @@ export default ({
         </div>
         {visible &&
           <div className={styles.wrapper2}>
-            <h2>{type} {date} 审查列表</h2>
+            <h2>{type} {moment(date).format('YYYY-MM-DD')} 审查列表</h2>
             <div style={{ marginTop: '20px' }}>
               <Row gutter={16} className={styles.rowStyle}>
                 <Col span={1} style={{ textAlign: 'right' }}>状态: </Col>

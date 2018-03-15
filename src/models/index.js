@@ -8,7 +8,7 @@ export default {
     currentShape: null,
     imageHeight: 0,
     imageNode: null,
-    date: '',
+    date: new Date(),
     type: '',
     visible: false,
     showType: '',
