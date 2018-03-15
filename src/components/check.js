@@ -218,17 +218,30 @@ export default Form.create()(({
               </TabPane>
             </Tabs>
             }
-            <div className={styles.section}>
-              <h2>当前审核广告版本列表</h2>
-              <Table
-                bordered
-                columns={columns}
-                rowKey={record => record.id}
-                dataSource={editions}
-              />
-            </div>
+            {showType === 'show' &&
+              <div className={styles.section}>
+                <h2>当前审核广告版本列表</h2>
+                <Table
+                  bordered
+                  columns={columns}
+                  rowKey={record => record.id}
+                  dataSource={editions}
+                />
+              </div>
+            }
           </div>
         </div>
+        {showType === 'check' &&
+          <div className={styles.section}>
+            <h2>当前审核广告版本列表</h2>
+            <Table
+              bordered
+              columns={columns}
+              rowKey={record => record.id}
+              dataSource={editions}
+            />
+          </div>
+        }
       </div>
       {showType === 'check' &&
         <div style={{ textAlign: 'center' }}>
