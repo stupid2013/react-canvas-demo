@@ -12,6 +12,7 @@ export default {
     type: '',
     visible: false,
     showType: '',
+    selectedShape: '',
     list: [
       {
         id: 1,

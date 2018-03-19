@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from 'react-konva';
 
 /* eslint no-undef: 0 */
+/* eslint no-unneeded-ternary: 0 */
 class MainImage extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
@@ -30,19 +31,13 @@ class MainImage extends React.Component {
     });
   }
   render() {
-    const { image, imageHeight, imageNode } = this.props;
+    const { image, imageHeight, imageNode, selectedShape } = this.props;
     return (
       <Image
         image={image}
-        draggable
+        draggable={(selectedShape === 'add-rect' || selectedShape === 'add-arrow' || selectedShape === 'add-note') ? false : true}
         width={960}
         height={imageHeight}
-        onMouseover={() => {
-          document.body.style.cursor = 'move';
-        }}
-        onMouseout={() => {
-          document.body.style.cursor = 'default';
-        }}
         ref={this.getImageInstance}
         dragBoundFunc={(pos) => {
           return {

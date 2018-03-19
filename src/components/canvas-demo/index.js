@@ -2,6 +2,7 @@ import React from 'react';
 import Konva from 'konva';
 import { Icon, Popconfirm } from 'antd';
 import { Stage, Layer } from 'react-konva';
+import styles from './index.css';
 import MainImage from './main-image';
 
 /* eslint no-undef: 0 */
@@ -146,42 +147,58 @@ class MyCanvas extends React.Component {
     group.add(anchor);
   }
   addRect = () => {
-    const { layerNode, stageNode, dispatch } = this.props;
-    const rect = new Konva.Rect({
-      width: 120,
-      height: 50,
-      stroke: 'red',
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'add-rect',
+      },
     });
 
-    const rectGroup = new Konva.Group({
-      x: 120,
-      y: 50,
-      draggable: true,
-    });
-    layerNode.add(rectGroup);
-    rectGroup.add(rect);
-    rectGroup.on('mouseover', () => {
-      document.body.style.cursor = 'crosshair';
-    });
+    // const rect = new Konva.Rect({
+    //   width: 120,
+    //   height: 50,
+    //   stroke: 'red',
+    // });
+    //
+    // const rectGroup = new Konva.Group({
+    //   x: 120,
+    //   y: 50,
+    //   draggable: true,
+    // });
+    // layerNode.add(rectGroup);
+    // rectGroup.add(rect);
+    // rectGroup.on('mouseover', () => {
+    //   document.body.style.cursor = 'crosshair';
+    // });
+    //
+    // rectGroup.on('click', (e) => {
+    //   dispatch({
+    //     type: 'canvas/stateWillUpdate',
+    //     payload: {
+    //       currentShape: e.target,
+    //     },
+    //   });
+    // });
+    //
+    // this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
+    // this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
+    // this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
+    // this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
 
-    rectGroup.on('click', (e) => {
-      dispatch({
-        type: 'canvas/stateWillUpdate',
-        payload: {
-          currentShape: e.target,
-        },
-      });
-    });
-
-    this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
-    this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
-    this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
-    this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
-
-    stageNode.add(layerNode);
+    // stageNode.add(layerNode);
   }
   addArrow = () => {
     const { layerNode, stageNode, dispatch } = this.props;
+
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'add-arrow',
+      },
+    });
+
     const arrow = new Konva.Arrow({
       points: [0, 0, 50, 80],
       pointerLength: 12,
@@ -215,6 +232,14 @@ class MyCanvas extends React.Component {
   }
   addNote = () => {
     const { layerNode, stageNode, dispatch } = this.props;
+
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'add-note',
+      },
+    });
+
     const tagNode = new Konva.Tag({
       fill: 'black',
       width: 120,
@@ -295,8 +320,15 @@ class MyCanvas extends React.Component {
       });
     });
   }
+  // freeDrawing = () => {} 后面研究 加上！
   clearLayer = () => {
-    const { layerNode } = this.props;
+    const { layerNode, dispatch } = this.props;
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'reset',
+      },
+    });
     const groups = layerNode.getChildren(node => (
       node.getClassName() === 'Group'
     ));
@@ -305,6 +337,12 @@ class MyCanvas extends React.Component {
   }
   deleteCurrent = () => {
     const { layerNode, currentShape, dispatch } = this.props;
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'delete',
+      },
+    });
     currentShape.destroy();
     layerNode.draw();
     dispatch({
@@ -341,13 +379,68 @@ class MyCanvas extends React.Component {
     });
   }
   render() {
-    const { dispatch, image, currentShape, imageHeight, imageNode } = this.props;
+    const { dispatch, image, currentShape, imageHeight, imageNode,
+      selectedShape, stageNode, layerNode } = this.props;
+    if (stageNode && (selectedShape === 'add-rect' || selectedShape === 'add-arrow' || selectedShape === 'add-note')) {
+      // console.log('=== stageNode', stageNode);
+      let isPaint = false;
+      let startX = 0;
+      let startY = 0;
+      stageNode.on('contentMousedown', (e) => {
+        isPaint = true;
+        const evt = e.evt;
+        startX = evt.layerX;
+        startY = evt.layerY;
+      });
+      stageNode.on('contentMouseup', () => {
+        isPaint = false;
+      });
+      stageNode.on('contentMousemove', () => {
+        if (isPaint) {
+          if (selectedShape === 'add-rect') {
+            const rect = new Konva.Rect({
+              width: 120,
+              height: 50,
+              stroke: 'red',
+            });
+
+            const rectGroup = new Konva.Group({
+              x: startX,
+              y: startY,
+              draggable: true,
+            });
+            layerNode.add(rectGroup);
+            rectGroup.add(rect);
+            rectGroup.on('mouseover', () => {
+              document.body.style.cursor = 'crosshair';
+            });
+
+            rectGroup.on('click', (ev) => {
+              dispatch({
+                type: 'canvas/stateWillUpdate',
+                payload: {
+                  currentShape: ev.target,
+                },
+              });
+            });
+
+            this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
+            this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
+            this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
+            this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
+          }
+        }
+        if (!isPaint) {
+          layerNode.draw();
+        }
+      });
+    }
     return (
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-        <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
-          <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
-          <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
-          <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
+      <div className={styles.wrapper}>
+        <div className={styles.operation_bar}>
+          <Icon type="file-add" data-type="add-rect" onClick={this.addRect} className={`${(selectedShape === 'add-rect') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="arrow-down" data-type="add-arrow" onClick={this.addArrow} className={`${(selectedShape === 'add-arrow') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="edit" data-type="add-note" onClick={this.addNote} className={`${(selectedShape === 'add-note') && styles.active}`} style={{ cursor: 'pointer' }} />
           <Popconfirm title="确认清空？" onConfirm={this.clearLayer} okText="确认" cancelText="取消">
             <Icon type="reload" style={{ cursor: 'pointer' }} />
           </Popconfirm>
@@ -372,6 +465,7 @@ class MyCanvas extends React.Component {
                 image={image}
                 imageHeight={imageHeight}
                 imageNode={imageNode}
+                selectedShape={selectedShape}
               />
             </Layer>
           </Stage>

@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.operation_bar {
+  font-size: 24px;
+  line-height: 2;
+  width: 1em;
+  margin-right: 32px;
+}
+
+.active {
+  color: #FE5E48;
+}
