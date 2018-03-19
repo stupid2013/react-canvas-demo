@@ -36,13 +36,13 @@ export default Form.create()(({
     });
   };
   const show = () => dispatch({
-    type: 'canvas/stateWillUpdate',
+    type: 'hubble/stateWillUpdate',
     payload: {
       showModal: true,
     },
   });
   const handleShow = () => dispatch({
-    type: 'canvas/stateWillUpdate',
+    type: 'hubble/stateWillUpdate',
     payload: {
       showEdition: true,
     },
@@ -105,7 +105,7 @@ export default Form.create()(({
               {imgBase64 ?
                 <img alt="pic" src={imgBase64} />
                 :
-                <img alt="pic" src={require('./images/test.png')} />
+                <img alt="pic" src={require('./../images/test.png')} />
               }
             </div>
           </div>

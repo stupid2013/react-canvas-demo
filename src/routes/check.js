@@ -1,8 +1,8 @@
 import { connect } from 'dva';
-import Check from './../components/check';
+import Check from './../components/hubble-demo/check';
 
 export default connect((s) => {
   return {
-    ...s.canvas,
+    ...s.hubble,
   };
 })(Check);

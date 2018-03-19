@@ -13,7 +13,7 @@ export default ({
   dispatch,
 }) => {
   const handleCancel = () => dispatch({
-    type: 'canvas/stateWillUpdate',
+    type: 'hubble/stateWillUpdate',
     payload: {
       showEdition: false,
     },

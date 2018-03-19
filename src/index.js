@@ -17,7 +17,8 @@ const app = dva({
 // app.use({});
 
 // 3. Model
-app.model(require('./models/index'));
+app.model(require('./models/hubble'));
+app.model(require('./models/canvas'));
 
 // 4. Router
 app.router(require('./router'));

@@ -1,12 +1,12 @@
 import React from 'react';
 import Konva from 'konva';
-import { Icon, Popconfirm, Modal } from 'antd';
+import { Icon, Popconfirm } from 'antd';
 import { Stage, Layer } from 'react-konva';
 import MainImage from './main-image';
 
 /* eslint no-undef: 0 */
 /* eslint global-require: 0 */
-class EvidenceModal extends React.Component {
+class MyCanvas extends React.Component {
   getStageInstance = (node) => {
     const { dispatch } = this.props;
     if (node) {
@@ -343,51 +343,42 @@ class EvidenceModal extends React.Component {
   render() {
     const { dispatch, image, currentShape, imageHeight, imageNode } = this.props;
     return (
-      <Modal
-        title="证据框选"
-        visible
-        maskClosable={false}
-        width={1080}
-        onOk={this.handleOk(dispatch)}
-        onCancel={this.handleCancel(dispatch)}
-      >
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-          <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
-            <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
-            <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
-            <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
-            <Popconfirm title="确认清空？" onConfirm={this.clearLayer} okText="确认" cancelText="取消">
-              <Icon type="reload" style={{ cursor: 'pointer' }} />
-            </Popconfirm>
-            { currentShape !== null ?
-              <Popconfirm title="确认删除？" onConfirm={this.deleteCurrent} okText="确认" cancelText="取消">
-                <Icon type="delete" style={{ cursor: 'pointer' }} />
-              </Popconfirm> :
-              <Icon type="delete" style={{ color: '#DDDEDD' }} />
-            }
-          </div>
-          <div style={{ border: '1px solid #eee' }}>
-            <Stage
-              id="currentCanvas"
-              ref={this.getStageInstance}
-              width={960}
-              height={680}
-              style={{ background: `url(${require('./images/tb.png')})` }}
-            >
-              <Layer ref={this.getLayerInstance} name="shapes">
-                <MainImage
-                  dispatch={dispatch}
-                  image={image}
-                  imageHeight={imageHeight}
-                  imageNode={imageNode}
-                />
-              </Layer>
-            </Stage>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
+        <div style={{ fontSize: '24px', lineHeight: '2', width: '1em', marginRight: '32px' }}>
+          <Icon type="file-add" onClick={this.addRect} style={{ cursor: 'pointer' }} />
+          <Icon type="arrow-down" onClick={this.addArrow} style={{ cursor: 'pointer' }} />
+          <Icon type="edit" onClick={this.addNote} style={{ cursor: 'pointer' }} />
+          <Popconfirm title="确认清空？" onConfirm={this.clearLayer} okText="确认" cancelText="取消">
+            <Icon type="reload" style={{ cursor: 'pointer' }} />
+          </Popconfirm>
+          { currentShape !== null ?
+            <Popconfirm title="确认删除？" onConfirm={this.deleteCurrent} okText="确认" cancelText="取消">
+              <Icon type="delete" style={{ cursor: 'pointer' }} />
+            </Popconfirm> :
+            <Icon type="delete" style={{ color: '#DDDEDD' }} />
+          }
         </div>
-      </Modal>
+        <div style={{ border: '1px solid #eee' }}>
+          <Stage
+            id="currentCanvas"
+            ref={this.getStageInstance}
+            width={960}
+            height={680}
+            style={{ background: `url(${require('./../images/tb.png')})` }}
+          >
+            <Layer ref={this.getLayerInstance} name="shapes">
+              <MainImage
+                dispatch={dispatch}
+                image={image}
+                imageHeight={imageHeight}
+                imageNode={imageNode}
+              />
+            </Layer>
+          </Stage>
+        </div>
+      </div>
     );
   }
 }
 
-export default EvidenceModal;
+export default MyCanvas;

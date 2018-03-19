@@ -17,13 +17,13 @@ export default ({
 }) => {
   const disabledDate = current => current && current.valueOf() > Date.now();
   const onChange = (dat, dateString) => dispatch({
-    type: 'canvas/stateWillUpdate',
+    type: 'hubble/stateWillUpdate',
     payload: {
       date: dateString,
     },
   });
   const change = value => dispatch({
-    type: 'canvas/stateWillUpdate',
+    type: 'hubble/stateWillUpdate',
     payload: {
       type: value,
     },
@@ -31,7 +31,7 @@ export default ({
   const check = () => {
     if (type !== '') {
       dispatch({
-        type: 'canvas/stateWillUpdate',
+        type: 'hubble/stateWillUpdate',
         payload: {
           visible: true,
         },
@@ -42,7 +42,7 @@ export default ({
   };
   const handleCheck = typ => (e) => {
     e.preventDefault();
-    hashHistory.push(`/check/${typ}`);
+    hashHistory.push(`/hubble/${typ}`);
   };
   const columns = [
     {

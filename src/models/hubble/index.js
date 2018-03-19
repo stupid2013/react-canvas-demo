@@ -1,6 +1,6 @@
 
 export default {
-  namespace: 'canvas',
+  namespace: 'hubble',
   state: {
     image: null,
     layerNode: null,

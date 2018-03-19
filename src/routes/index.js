@@ -1,8 +1,8 @@
 import { connect } from 'dva';
-import Index from './../components/index';
+import Index from './../components/hubble-demo/index';
 
 export default connect((s) => {
   return {
-    ...s.canvas,
+    ...s.hubble,
   };
 })(Index);
