@@ -39,6 +39,16 @@ class MyCanvas extends React.Component {
     const arrowRight = group.get('.arrowRight')[0];
     const shape = group.get(`${shap}`)[0];
 
+    if (shape.getClassName() === 'Arrow') {
+      shape.setAttrs({
+        pointerLength: 12,
+        pointerWidth: 10,
+        fill: 'red',
+        stroke: 'red',
+        strokeWidth: 3,
+      });
+    }
+
     const anchorX = activeAnchor.getX();
     const anchorY = activeAnchor.getY();
 
@@ -105,24 +115,12 @@ class MyCanvas extends React.Component {
       y,
       stroke: '#666',
       fill: '#ddd',
-      strokeWidth: 3,
+      strokeWidth: 2,
       radius: 6,
       name,
       draggable: true,
       dragOnTop: false,
     });
-
-    // if (currentShape !== null) {
-    //   anchor.setAttrs({
-    //     stroke: '#666',
-    //     fill: '#ddd',
-    //   });
-    // } else {
-    //   anchor.setAttrs({
-    //     stroke: 'transparent',
-    //     fill: 'transparent',
-    //   });
-    // }
 
     anchor.on('dragmove', () => {
       this.update(anchor, shape);
@@ -140,19 +138,13 @@ class MyCanvas extends React.Component {
     anchor.on('mouseover', () => {
       const layer1 = anchor.getLayer();
       document.body.style.cursor = 'pointer';
-      // anchor.setAttrs({
-      //   stroke: '#666',
-      //   fill: '#ddd',
-      // });
+      anchor.setStrokeWidth(4);
       layer1.draw();
     });
     anchor.on('mouseout', () => {
       const layer2 = anchor.getLayer();
       document.body.style.cursor = 'default';
-      // anchor.setAttrs({
-      //   stroke: 'transparent',
-      //   fill: 'transparent',
-      // });
+      anchor.setStrokeWidth(2);
       layer2.draw();
     });
 
@@ -291,45 +283,167 @@ class MyCanvas extends React.Component {
           const evt = e.evt;
           const startX = evt.layerX;
           const startY = evt.layerY;
-          const rect = new Konva.Rect({
-            width: 0,
-            height: 0,
-            stroke: 'red',
-          });
+          if (selectedShape === 'add-rect') {
+            const rect = new Konva.Rect({
+              width: 0,
+              height: 0,
+              stroke: 'red',
+            });
 
-          const rectGroup = new Konva.Group({
-            x: startX,
-            y: startY,
-            draggable: true,
-          });
-          layerNode.add(rectGroup);
-          rectGroup.add(rect);
-          rectGroup.on('mouseover', () => {
-            document.body.style.cursor = 'crosshair';
-          });
+            const rectGroup = new Konva.Group({
+              x: startX,
+              y: startY,
+              draggable: true,
+            });
+            layerNode.add(rectGroup);
+            rectGroup.add(rect);
+            rectGroup.on('mouseover', () => {
+              document.body.style.cursor = 'crosshair';
+            });
 
-          rectGroup.on('mousedown', (ev) => {
+            rectGroup.on('mousedown', (ev) => {
+              dispatch({
+                type: 'canvas/stateWillUpdate',
+                payload: {
+                  currentShape: ev.target.getParent(),
+                },
+              });
+            });
+
+            this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
+            this.addAnchor(rectGroup, 0, 0, 'topRight', 'Rect');
+            this.addAnchor(rectGroup, 0, 0, 'bottomLeft', 'Rect');
+            this.addAnchor(rectGroup, 0, 0, 'bottomRight', 'Rect');
+
+            stageNode.add(layerNode);
+
             dispatch({
               type: 'canvas/stateWillUpdate',
               payload: {
-                currentShape: ev.target.getParent(),
+                currentShape: rectGroup,
               },
             });
-          });
+          } else if (selectedShape === 'add-arrow') {
+            const arrow = new Konva.Arrow({
+              points: [0, 0, 0, 0],
+            });
 
-          this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
-          this.addAnchor(rectGroup, 0, 0, 'topRight', 'Rect');
-          this.addAnchor(rectGroup, 0, 0, 'bottomLeft', 'Rect');
-          this.addAnchor(rectGroup, 0, 0, 'bottomRight', 'Rect');
+            const arrowGroup = new Konva.Group({
+              x: startX,
+              y: startY,
+              draggable: true,
+            });
+            arrowGroup.on('mouseover', () => {
+              document.body.style.cursor = 'crosshair';
+            });
+            layerNode.add(arrowGroup);
+            arrowGroup.add(arrow);
+            arrowGroup.on('click', (ev) => {
+              dispatch({
+                type: 'hubble/stateWillUpdate',
+                payload: {
+                  currentShape: ev.target.getParent(),
+                },
+              });
+            });
+            this.addAnchor(arrowGroup, 0, 0, 'arrowLeft', 'Arrow');
+            this.addAnchor(arrowGroup, 0, 0, 'arrowRight', 'Arrow');
+            stageNode.add(layerNode);
+            dispatch({
+              type: 'canvas/stateWillUpdate',
+              payload: {
+                currentShape: arrowGroup,
+              },
+            });
+          } else if (selectedShape === 'add-note') {
+            const tagNode = new Konva.Tag({
+              fill: 'black',
+              width: 0,
+              height: 0,
+              pointerWidth: 10,
+              pointerHeight: 10,
+              lineJoin: 'round',
+              shadowColor: 'black',
+              shadowBlur: 10,
+              shadowOffset: 10,
+              shadowOpacity: 0.5,
+              opacity: 0.1,
+            });
+            const textNote = new Konva.Text({
+              text: '双击以修改',
+              width: tagNode.width(),
+              height: tagNode.height(),
+              fontSize: 16,
+              lineHeight: 1.2,
+              padding: 12,
+              fill: 'red',
+            });
 
-          stageNode.add(layerNode);
+            const noteGroup = new Konva.Group({
+              x: startX,
+              y: startY,
+              draggable: true,
+            });
+            layerNode.add(noteGroup);
+            noteGroup.add(tagNode);
+            noteGroup.add(textNote);
+            noteGroup.on('mouseover', () => {
+              document.body.style.cursor = 'crosshair';
+            });
+            noteGroup.on('click', (ev) => {
+              // console.log('=== ev ', ev);
+              // console.log('=== ev.target.getParent() ', ev.target.getParent());
+              dispatch({
+                type: 'hubble/stateWillUpdate',
+                payload: {
+                  currentShape: ev.target.getParent(),
+                },
+              });
+            });
+            this.addAnchor(noteGroup, 0, 0, 'topLeft', 'Tag');
+            this.addAnchor(noteGroup, 0, 0, 'topRight', 'Tag');
+            this.addAnchor(noteGroup, 0, 0, 'bottomLeft', 'Tag');
+            this.addAnchor(noteGroup, 0, 0, 'bottomRight', 'Tag');
 
-          dispatch({
-            type: 'canvas/stateWillUpdate',
-            payload: {
-              currentShape: rectGroup,
-            },
-          });
+            stageNode.add(layerNode);
+            dispatch({
+              type: 'canvas/stateWillUpdate',
+              payload: {
+                currentShape: noteGroup,
+              },
+            });
+            textNote.on('dblclick', () => {
+              // create textarea over canvas with absolute position
+              // first we need to find its positon
+              const textPosition = textNote.getAbsolutePosition();
+              const stageBox = stageNode.getContainer().getBoundingClientRect();
+
+              const areaPosition = {
+                x: textPosition.x + stageBox.left,
+                y: textPosition.y + stageBox.top,
+              };
+
+              // create textarea and style it
+              const textarea = document.createElement('textarea');
+              document.body.appendChild(textarea);
+
+              textarea.value = textNote.text();
+              textarea.style.position = 'absolute';
+              textarea.style.top = `${areaPosition.y}px`;
+              textarea.style.left = `${areaPosition.x}px`;
+              textarea.style.zIndex = '1000';
+              textarea.style.width = textNote.width();
+              textarea.focus();
+
+              textarea.addEventListener('keydown', (ev) => {
+                if (ev.keyCode === 13) {
+                  textNote.text(textarea.value);
+                  layerNode.draw();
+                  document.body.removeChild(textarea);
+                }
+              });
+            });
+          }
         }
       });
       stageNode.on('dblclick', () => {
