@@ -103,14 +103,26 @@ class MyCanvas extends React.Component {
     const anchor = new Konva.Circle({
       x,
       y,
-      stroke: 'transparent',
-      fill: 'transparent',
+      stroke: '#666',
+      fill: '#ddd',
       strokeWidth: 3,
       radius: 6,
       name,
       draggable: true,
       dragOnTop: false,
     });
+
+    // if (currentShape !== null) {
+    //   anchor.setAttrs({
+    //     stroke: '#666',
+    //     fill: '#ddd',
+    //   });
+    // } else {
+    //   anchor.setAttrs({
+    //     stroke: 'transparent',
+    //     fill: 'transparent',
+    //   });
+    // }
 
     anchor.on('dragmove', () => {
       this.update(anchor, shape);
@@ -128,19 +140,19 @@ class MyCanvas extends React.Component {
     anchor.on('mouseover', () => {
       const layer1 = anchor.getLayer();
       document.body.style.cursor = 'pointer';
-      anchor.setAttrs({
-        stroke: '#666',
-        fill: '#ddd',
-      });
+      // anchor.setAttrs({
+      //   stroke: '#666',
+      //   fill: '#ddd',
+      // });
       layer1.draw();
     });
     anchor.on('mouseout', () => {
       const layer2 = anchor.getLayer();
       document.body.style.cursor = 'default';
-      anchor.setAttrs({
-        stroke: 'transparent',
-        fill: 'transparent',
-      });
+      // anchor.setAttrs({
+      //   stroke: 'transparent',
+      //   fill: 'transparent',
+      // });
       layer2.draw();
     });
 
@@ -148,49 +160,15 @@ class MyCanvas extends React.Component {
   }
   addRect = () => {
     const { dispatch } = this.props;
-
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
         selectedShape: 'add-rect',
       },
     });
-
-    // const rect = new Konva.Rect({
-    //   width: 120,
-    //   height: 50,
-    //   stroke: 'red',
-    // });
-    //
-    // const rectGroup = new Konva.Group({
-    //   x: 120,
-    //   y: 50,
-    //   draggable: true,
-    // });
-    // layerNode.add(rectGroup);
-    // rectGroup.add(rect);
-    // rectGroup.on('mouseover', () => {
-    //   document.body.style.cursor = 'crosshair';
-    // });
-    //
-    // rectGroup.on('click', (e) => {
-    //   dispatch({
-    //     type: 'canvas/stateWillUpdate',
-    //     payload: {
-    //       currentShape: e.target,
-    //     },
-    //   });
-    // });
-    //
-    // this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
-    // this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
-    // this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
-    // this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
-
-    // stageNode.add(layerNode);
   }
   addArrow = () => {
-    const { layerNode, stageNode, dispatch } = this.props;
+    const { dispatch } = this.props;
 
     dispatch({
       type: 'canvas/stateWillUpdate',
@@ -198,40 +176,9 @@ class MyCanvas extends React.Component {
         selectedShape: 'add-arrow',
       },
     });
-
-    const arrow = new Konva.Arrow({
-      points: [0, 0, 50, 80],
-      pointerLength: 12,
-      pointerWidth: 10,
-      fill: 'red',
-      stroke: 'red',
-      strokeWidth: 3,
-    });
-
-    const arrowGroup = new Konva.Group({
-      x: 20,
-      y: 20,
-      draggable: true,
-    });
-    arrowGroup.on('mouseover', () => {
-      document.body.style.cursor = 'crosshair';
-    });
-    layerNode.add(arrowGroup);
-    arrowGroup.add(arrow);
-    arrowGroup.on('click', (e) => {
-      dispatch({
-        type: 'canvas/stateWillUpdate',
-        payload: {
-          currentShape: e.target,
-        },
-      });
-    });
-    this.addAnchor(arrowGroup, 0, 0, 'arrowLeft', 'Arrow');
-    this.addAnchor(arrowGroup, 55, 88, 'arrowRight', 'Arrow');
-    stageNode.add(layerNode);
   }
   addNote = () => {
-    const { layerNode, stageNode, dispatch } = this.props;
+    const { dispatch } = this.props;
 
     dispatch({
       type: 'canvas/stateWillUpdate',
@@ -239,104 +186,23 @@ class MyCanvas extends React.Component {
         selectedShape: 'add-note',
       },
     });
-
-    const tagNode = new Konva.Tag({
-      fill: 'black',
-      width: 120,
-      height: 50,
-      pointerWidth: 10,
-      pointerHeight: 10,
-      lineJoin: 'round',
-      shadowColor: 'black',
-      shadowBlur: 10,
-      shadowOffset: 10,
-      shadowOpacity: 0.5,
-      opacity: 0.1,
-    });
-    const textNote = new Konva.Text({
-      text: '双击以修改',
-      width: tagNode.width(),
-      height: tagNode.height(),
-      fontSize: 16,
-      lineHeight: 1.2,
-      padding: 12,
-      fill: 'red',
-    });
-
-    const noteGroup = new Konva.Group({
-      x: 120,
-      y: 50,
-      draggable: true,
-    });
-    layerNode.add(noteGroup);
-    noteGroup.add(tagNode);
-    noteGroup.add(textNote);
-    noteGroup.on('mouseover', () => {
-      document.body.style.cursor = 'crosshair';
-    });
-    noteGroup.on('click', (e) => {
-      dispatch({
-        type: 'canvas/stateWillUpdate',
-        payload: {
-          currentShape: e.target.parent,
-        },
-      });
-    });
-    this.addAnchor(noteGroup, 0, 0, 'topLeft', 'Tag');
-    this.addAnchor(noteGroup, 120, 0, 'topRight', 'Tag');
-    this.addAnchor(noteGroup, 120, 51, 'bottomRight', 'Tag');
-    this.addAnchor(noteGroup, 0, 51, 'bottomLeft', 'Tag');
-
-    stageNode.add(layerNode);
-    textNote.on('dblclick', () => {
-      // create textarea over canvas with absolute position
-      // first we need to find its positon
-      const textPosition = textNote.getAbsolutePosition();
-      const stageBox = stageNode.getContainer().getBoundingClientRect();
-
-      const areaPosition = {
-        x: textPosition.x + stageBox.left,
-        y: textPosition.y + stageBox.top,
-      };
-
-      // create textarea and style it
-      const textarea = document.createElement('textarea');
-      document.body.appendChild(textarea);
-
-      textarea.value = textNote.text();
-      textarea.style.position = 'absolute';
-      textarea.style.top = `${areaPosition.y}px`;
-      textarea.style.left = `${areaPosition.x}px`;
-      textarea.style.zIndex = '1000';
-      textarea.style.width = textNote.width();
-      textarea.focus();
-
-      textarea.addEventListener('keydown', (e) => {
-        if (e.keyCode === 13) {
-          textNote.text(textarea.value);
-          layerNode.draw();
-          document.body.removeChild(textarea);
-        }
-      });
-    });
   }
-  // freeDrawing = () => {} 后面研究 加上！
   clearLayer = () => {
-    const { layerNode, dispatch } = this.props;
+    const { stageNode, dispatch } = this.props;
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
         selectedShape: 'reset',
       },
     });
-    const groups = layerNode.getChildren(node => (
-      node.getClassName() === 'Group'
-    ));
-    groups.destroy();
-    layerNode.draw();
+    // const groups = layerNode.getChildren(node => (
+    //   node.getClassName() === 'Group'
+    // ));
+    // groups.destroy();
+    stageNode.draw();
   }
   deleteCurrent = () => {
-    const { layerNode, currentShape, dispatch } = this.props;
+    const { stageNode, currentShape, dispatch } = this.props;
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
@@ -344,7 +210,7 @@ class MyCanvas extends React.Component {
       },
     });
     currentShape.destroy();
-    layerNode.draw();
+    stageNode.draw();
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
@@ -353,9 +219,22 @@ class MyCanvas extends React.Component {
     });
   }
   download = () => {
-    const canvas = document.getElementsByTagName('canvas')[0];
-    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-    window.location.href = image;
+    // 原生转为base64格式
+    // const canvas = document.getElementsByTagName('canvas')[0];
+    // const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+    // window.location.href = image;
+
+    // konva的方法
+    const { stageNode } = this.props;
+    // stageNode.toImage({
+    //   mimeType: 'image/png',
+    //   callback: (img) => {
+    //     console.log('=== img ', img);
+    //   },
+    // });
+    stageNode.toDataURL({
+      mimeType: 'image/png',
+    });
   }
   handleOk = dispatch => (e) => {
     e.preventDefault();
@@ -381,58 +260,85 @@ class MyCanvas extends React.Component {
   render() {
     const { dispatch, image, currentShape, imageHeight, imageNode,
       selectedShape, stageNode, layerNode } = this.props;
+    if (currentShape !== null) {
+      const circles = currentShape.getChildren(node => (node.getClassName() === 'Circle'));
+      circles.setAttrs({
+        stroke: '#666',
+        fill: '#ddd',
+      });
+      stageNode.draw();
+    } else if (layerNode) {
+      const all = layerNode.getChildren(node => (node.getClassName() === 'Group'));
+      const circles = [];
+      all.forEach((item) => {
+        const cir = item.getChildren(node => (node.getClassName() === 'Circle'));
+        if (cir) {
+          circles.push(...cir);
+        }
+      });
+      if (circles.length) {
+        const group = new Konva.Collection(...circles);
+        group.setAttrs({
+          stroke: 'transparent',
+          fill: 'transparent',
+        });
+        stageNode.draw();
+      }
+    }
     if (stageNode && (selectedShape === 'add-rect' || selectedShape === 'add-arrow' || selectedShape === 'add-note')) {
-      // console.log('=== stageNode', stageNode);
-      let isPaint = false;
-      let startX = 0;
-      let startY = 0;
-      stageNode.on('contentMousedown', (e) => {
-        isPaint = true;
-        const evt = e.evt;
-        startX = evt.layerX;
-        startY = evt.layerY;
-      });
-      stageNode.on('contentMouseup', () => {
-        isPaint = false;
-      });
-      stageNode.on('contentMousemove', () => {
-        if (isPaint) {
-          if (selectedShape === 'add-rect') {
-            const rect = new Konva.Rect({
-              width: 120,
-              height: 50,
-              stroke: 'red',
-            });
+      stageNode.off('contentMousedown').on('contentMousedown', (e) => {
+        if (currentShape === null) {
+          const evt = e.evt;
+          const startX = evt.layerX;
+          const startY = evt.layerY;
+          const rect = new Konva.Rect({
+            width: 0,
+            height: 0,
+            stroke: 'red',
+          });
 
-            const rectGroup = new Konva.Group({
-              x: startX,
-              y: startY,
-              draggable: true,
-            });
-            layerNode.add(rectGroup);
-            rectGroup.add(rect);
-            rectGroup.on('mouseover', () => {
-              document.body.style.cursor = 'crosshair';
-            });
+          const rectGroup = new Konva.Group({
+            x: startX,
+            y: startY,
+            draggable: true,
+          });
+          layerNode.add(rectGroup);
+          rectGroup.add(rect);
+          rectGroup.on('mouseover', () => {
+            document.body.style.cursor = 'crosshair';
+          });
 
-            rectGroup.on('click', (ev) => {
-              dispatch({
-                type: 'canvas/stateWillUpdate',
-                payload: {
-                  currentShape: ev.target,
-                },
-              });
+          rectGroup.on('mousedown', (ev) => {
+            dispatch({
+              type: 'canvas/stateWillUpdate',
+              payload: {
+                currentShape: ev.target.getParent(),
+              },
             });
+          });
 
-            this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
-            this.addAnchor(rectGroup, 120, 0, 'topRight', 'Rect');
-            this.addAnchor(rectGroup, 120, 51, 'bottomRight', 'Rect');
-            this.addAnchor(rectGroup, 0, 51, 'bottomLeft', 'Rect');
-          }
+          this.addAnchor(rectGroup, 0, 0, 'topLeft', 'Rect');
+          this.addAnchor(rectGroup, 0, 0, 'topRight', 'Rect');
+          this.addAnchor(rectGroup, 0, 0, 'bottomLeft', 'Rect');
+          this.addAnchor(rectGroup, 0, 0, 'bottomRight', 'Rect');
+
+          stageNode.add(layerNode);
+
+          dispatch({
+            type: 'canvas/stateWillUpdate',
+            payload: {
+              currentShape: rectGroup,
+            },
+          });
         }
-        if (!isPaint) {
-          layerNode.draw();
-        }
+      });
+      stageNode.on('dblclick', () => {
+        dispatch({
+          type: 'canvas/stateWillUpdate',
+          payload: {
+            currentShape: null,
+          },
+        });
       });
     }
     return (
@@ -450,6 +356,7 @@ class MyCanvas extends React.Component {
             </Popconfirm> :
             <Icon type="delete" style={{ color: '#DDDEDD' }} />
           }
+          <Icon type="download" onClick={this.download} style={{ cursor: 'pointer' }} />
         </div>
         <div style={{ border: '1px solid #eee' }}>
           <Stage
@@ -459,7 +366,7 @@ class MyCanvas extends React.Component {
             height={680}
             style={{ background: `url(${require('./../images/tb.png')})` }}
           >
-            <Layer ref={this.getLayerInstance} name="shapes">
+            <Layer name="shapes">
               <MainImage
                 dispatch={dispatch}
                 image={image}
@@ -468,6 +375,7 @@ class MyCanvas extends React.Component {
                 selectedShape={selectedShape}
               />
             </Layer>
+            <Layer ref={this.getLayerInstance} />
           </Stage>
         </div>
       </div>

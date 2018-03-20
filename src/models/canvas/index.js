@@ -3,8 +3,8 @@ export default {
   namespace: 'canvas',
   state: {
     image: null,
-    layerNode: null,
     stageNode: null,
+    layerNode: null,
     currentShape: null,
     imageHeight: 0,
     imageNode: null,
