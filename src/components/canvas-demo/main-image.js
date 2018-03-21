@@ -31,12 +31,12 @@ class MainImage extends React.Component {
     });
   }
   render() {
-    const { image, imageHeight, imageNode } = this.props;
+    const { image, imageHeight, imageNode, selectedShape } = this.props;
     return (
       <Image
         image={image}
         name="image"
-        draggable
+        draggable={(selectedShape === 'add-rect' || selectedShape === 'add-arrow' || selectedShape === 'add-note') ? false : true}
         width={960}
         height={imageHeight}
         ref={this.getImageInstance}

@@ -180,18 +180,18 @@ class MyCanvas extends React.Component {
     });
   }
   clearLayer = () => {
-    const { stageNode, dispatch } = this.props;
+    const { layerNode, dispatch } = this.props;
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
         selectedShape: 'reset',
       },
     });
-    // const groups = layerNode.getChildren(node => (
-    //   node.getClassName() === 'Group'
-    // ));
-    // groups.destroy();
-    stageNode.draw();
+    const groups = layerNode.getChildren(node => (
+      node.getClassName() === 'Group'
+    ));
+    groups.destroy();
+    layerNode.draw();
   }
   deleteCurrent = () => {
     const { stageNode, currentShape, dispatch } = this.props;
@@ -338,9 +338,9 @@ class MyCanvas extends React.Component {
             });
             layerNode.add(arrowGroup);
             arrowGroup.add(arrow);
-            arrowGroup.on('click', (ev) => {
+            arrowGroup.on('mousedown', (ev) => {
               dispatch({
-                type: 'hubble/stateWillUpdate',
+                type: 'canvas/stateWillUpdate',
                 payload: {
                   currentShape: ev.target.getParent(),
                 },
@@ -387,14 +387,10 @@ class MyCanvas extends React.Component {
             layerNode.add(noteGroup);
             noteGroup.add(tagNode);
             noteGroup.add(textNote);
-            noteGroup.on('mouseover', () => {
+            noteGroup.on('mousedown', (ev) => {
               document.body.style.cursor = 'crosshair';
-            });
-            noteGroup.on('click', (ev) => {
-              // console.log('=== ev ', ev);
-              // console.log('=== ev.target.getParent() ', ev.target.getParent());
               dispatch({
-                type: 'hubble/stateWillUpdate',
+                type: 'canvas/stateWillUpdate',
                 payload: {
                   currentShape: ev.target.getParent(),
                 },
@@ -404,8 +400,8 @@ class MyCanvas extends React.Component {
             this.addAnchor(noteGroup, 0, 0, 'topRight', 'Tag');
             this.addAnchor(noteGroup, 0, 0, 'bottomLeft', 'Tag');
             this.addAnchor(noteGroup, 0, 0, 'bottomRight', 'Tag');
-
             stageNode.add(layerNode);
+
             dispatch({
               type: 'canvas/stateWillUpdate',
               payload: {
@@ -432,7 +428,8 @@ class MyCanvas extends React.Component {
               textarea.style.top = `${areaPosition.y}px`;
               textarea.style.left = `${areaPosition.x}px`;
               textarea.style.zIndex = '1000';
-              textarea.style.width = textNote.width();
+              textarea.style.width = `${tagNode.width()}px`;
+              textarea.style.height = `${tagNode.height()}px`;
               textarea.focus();
 
               textarea.addEventListener('keydown', (ev) => {
