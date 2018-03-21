@@ -7,6 +7,7 @@ import MainImage from './main-image';
 
 /* eslint no-undef: 0 */
 /* eslint global-require: 0 */
+/* eslint no-underscore-dangle: 0 */
 class MyCanvas extends React.Component {
   getStageInstance = (node) => {
     const { dispatch } = this.props;
@@ -258,6 +259,28 @@ class MyCanvas extends React.Component {
         stroke: '#666',
         fill: '#ddd',
       });
+      const currentId = currentShape._id;
+      const groups = layerNode.getChildren(node => (node.getClassName() === 'Group'));
+      const others = [];
+      groups.forEach((item) => {
+        if (item._id !== currentId) {
+          others.push(item);
+        }
+      });
+      const cirs = [];
+      others.forEach((item) => {
+        const cir = item.getChildren(node => (node.getClassName() === 'Circle'));
+        if (cir) {
+          cirs.push(...cir);
+        }
+      });
+      if (cirs.length) {
+        const group = new Konva.Collection(...cirs);
+        group.setAttrs({
+          stroke: 'transparent',
+          fill: 'transparent',
+        });
+      }
       stageNode.draw();
     } else if (layerNode) {
       const all = layerNode.getChildren(node => (node.getClassName() === 'Group'));
