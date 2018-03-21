@@ -162,7 +162,6 @@ class MyCanvas extends React.Component {
   }
   addArrow = () => {
     const { dispatch } = this.props;
-
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
@@ -172,7 +171,6 @@ class MyCanvas extends React.Component {
   }
   addNote = () => {
     const { dispatch } = this.props;
-
     dispatch({
       type: 'canvas/stateWillUpdate',
       payload: {
@@ -200,16 +198,11 @@ class MyCanvas extends React.Component {
       type: 'canvas/stateWillUpdate',
       payload: {
         selectedShape: 'delete',
+        currentShape: null,
       },
     });
     currentShape.destroy();
     stageNode.draw();
-    dispatch({
-      type: 'canvas/stateWillUpdate',
-      payload: {
-        currentShape: null,
-      },
-    });
   }
   download = () => {
     // 原生转为base64格式
@@ -227,27 +220,6 @@ class MyCanvas extends React.Component {
     // });
     stageNode.toDataURL({
       mimeType: 'image/png',
-    });
-  }
-  handleOk = dispatch => (e) => {
-    e.preventDefault();
-    const canvas = document.getElementsByTagName('canvas')[0];
-    const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-    dispatch({
-      type: 'canvas/stateWillUpdate',
-      payload: {
-        showModal: false,
-        imgBase64: image,
-      },
-    });
-  }
-  handleCancel = dispatch => (e) => {
-    e.preventDefault();
-    dispatch({
-      type: 'canvas/stateWillUpdate',
-      payload: {
-        showModal: false,
-      },
     });
   }
   render() {
