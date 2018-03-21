@@ -8,7 +8,7 @@ class MainImage extends React.Component {
     const { dispatch } = this.props;
     const img = new window.Image();
     /* eslint global-require: 0 */
-    img.src = require('./../images/test.png');
+    img.src = 'http://dwz.cn/7DXlfC';
     // img.src = 'http://konvajs.github.io/assets/darth-vader.jpg';
     img.onload = () => {
       const imageHeight = Math.round((img.height * 960) / img.width);

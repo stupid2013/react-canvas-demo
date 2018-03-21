@@ -469,7 +469,7 @@ class MyCanvas extends React.Component {
             id="currentCanvas"
             ref={this.getStageInstance}
             width={960}
-            height={680}
+            height={600}
             style={{ background: `url(${require('./../images/tb.png')})` }}
           >
             <Layer name="shapes">

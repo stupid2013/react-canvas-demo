@@ -3,6 +3,7 @@ import Konva from 'konva';
 import { Icon, Popconfirm, Modal } from 'antd';
 import { Stage, Layer } from 'react-konva';
 import MainImage from './main-image';
+// import Canvas from './../canvas-demo';
 
 /* eslint no-undef: 0 */
 /* eslint global-require: 0 */
