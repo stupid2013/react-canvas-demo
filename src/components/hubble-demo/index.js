@@ -12,7 +12,6 @@ export default ({
   list,
   date,
   type,
-  visible,
   dispatch,
 }) => {
   const disabledDate = current => current && current.valueOf() > Date.now();
@@ -86,16 +85,16 @@ export default ({
   return (
     <div className={styles.container}>
       <header>
-        <h2>网络经济主体审查</h2>
+        <h2>测试测试测试 嗯</h2>
       </header>
       <div className={styles.content}>
         <div className={styles.wrapper1}>
           <Row gutter={16} className={styles.rowStyle}>
-            <Col span={2} style={{ textAlign: 'right' }}>监测日期: </Col>
+            <Col span={1} style={{ textAlign: 'right' }}>日期: </Col>
             <Col span={4}>
               <DatePicker value={moment(date)} disabledDate={disabledDate} onChange={onChange} style={{ width: '100%' }} />
             </Col>
-            <Col span={2} style={{ textAlign: 'right' }}>监测经济主体: </Col>
+            <Col span={1} style={{ textAlign: 'right' }}>网站: </Col>
             <Col span={4}>
               <Select value={`${type}`} onChange={change} style={{ width: '100%' }} placeholder="请选择...">
                 <Option value="京东">京东</Option>
@@ -108,34 +107,32 @@ export default ({
             </Col>
           </Row>
         </div>
-        {visible &&
-          <div className={styles.wrapper2}>
-            <h2>{type} {moment(date).format('YYYY-MM-DD')} 审查列表</h2>
-            <div style={{ marginTop: '20px' }}>
-              <Row gutter={16} className={styles.rowStyle}>
-                <Col span={1} style={{ textAlign: 'right' }}>状态: </Col>
-                <Col span={4}>
-                  <Select style={{ width: '100%' }} placeholder="请选择...">
-                    <Option value="1">全部</Option>
-                    <Option value="2">已审查</Option>
-                    <Option value="3">未审查</Option>
-                  </Select>
-                </Col>
-                <Col span={1} style={{ textAlign: 'right' }}>搜索: </Col>
-                <Col span={4}>
-                  <Search placeholder="搜索..." />
-                </Col>
-              </Row>
-              <Table
-                style={{ marginTop: '20px' }}
-                bordered
-                dataSource={list}
-                rowKey={data => data.id}
-                columns={columns}
-              />
-            </div>
+        <div className={styles.wrapper2}>
+          <h2>{type} {moment(date).format('YYYY-MM-DD')} 审查列表</h2>
+          <div style={{ marginTop: '20px' }}>
+            <Row gutter={16} className={styles.rowStyle}>
+              <Col span={1} style={{ textAlign: 'right' }}>状态: </Col>
+              <Col span={4}>
+                <Select style={{ width: '100%' }} placeholder="请选择...">
+                  <Option value="1">全部</Option>
+                  <Option value="2">已审查</Option>
+                  <Option value="3">未审查</Option>
+                </Select>
+              </Col>
+              <Col span={1} style={{ textAlign: 'right' }}>搜索: </Col>
+              <Col span={4}>
+                <Search placeholder="搜索..." />
+              </Col>
+            </Row>
+            <Table
+              style={{ marginTop: '20px' }}
+              bordered
+              dataSource={list}
+              rowKey={data => data.id}
+              columns={columns}
+            />
           </div>
-        }
+        </div>
       </div>
     </div>
   );

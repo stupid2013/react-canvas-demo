@@ -2,15 +2,8 @@
 export default {
   namespace: 'hubble',
   state: {
-    image: null,
-    layerNode: null,
-    stageNode: null,
-    currentShape: null,
-    imageHeight: 0,
-    imageNode: null,
     date: new Date(),
     type: '',
-    visible: false,
     showType: '',
     list: [
       {
@@ -63,7 +56,6 @@ export default {
     ],
     showModal: false,
     showEdition: false,
-    imgBase64: '',
   },
   reducers: {
     stateWillUpdate(state, { payload }) {
@@ -81,7 +73,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/check/show') {
+        if (pathname === '/hubble/show') {
           dispatch({
             type: 'stateWillUpdate',
             payload: {
@@ -89,7 +81,7 @@ export default {
             },
           });
         }
-        if (pathname === '/check/check') {
+        if (pathname === '/hubble/check') {
           dispatch({
             type: 'stateWillUpdate',
             payload: {
