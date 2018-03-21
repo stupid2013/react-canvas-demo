@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
-// import Canvas from './../canvas-demo';
+import Canvas from './../canvas';
 
 const FormItem = Form.Item;
 
@@ -9,6 +9,7 @@ const FormItem = Form.Item;
 const EvidenceModal = ({
   dispatch,
   form,
+  canvasData,
 }) => {
   const { getFieldDecorator } = form;
   const handleCancel = (e) => {
@@ -53,8 +54,8 @@ const EvidenceModal = ({
       onOk={handleSubmit}
       onCancel={handleCancel}
     >
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-        123
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', marginBottom: '20px' }}>
+        <Canvas from="hubble" {...canvasData} />
       </div>
       <Form onSubmit={handleSubmit} style={{ width: '76%', margin: 'auto' }}>
         <FormItem

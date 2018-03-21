@@ -11,15 +11,29 @@ export default ({
   editions,
   showModal,
   dispatch,
-  layerNode,
-  stageNode,
+  showEdition,
+  showType,
+
   image,
+  stageNode,
+  layerNode,
   currentShape,
   imageHeight,
   imageNode,
-  showEdition,
-  showType,
+  selectedShape,
+  imgArr,
 }) => {
+  const canvasData = {
+    dispatch,
+    image,
+    stageNode,
+    layerNode,
+    currentShape,
+    imageHeight,
+    imageNode,
+    selectedShape,
+    imgArr,
+  };
   const show = () => dispatch({
     type: 'hubble/stateWillUpdate',
     payload: {
@@ -87,16 +101,7 @@ export default ({
           <Button onClick={() => (hashHistory.push('/'))} type="primary">完成审核</Button>
         </div>
       }
-      {showModal &&
-        <CanvasModal
-          dispatch={dispatch}
-          layerNode={layerNode}
-          stageNode={stageNode}
-          image={image}
-          currentShape={currentShape}
-          imageHeight={imageHeight}
-          imageNode={imageNode}
-        />
+      {showModal && <CanvasModal dispatch={dispatch} canvasData={canvasData} />
       }
       {showEdition &&
         <EditionModal

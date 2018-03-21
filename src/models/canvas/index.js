@@ -8,7 +8,6 @@ export default {
     currentShape: null,
     imageHeight: 0,
     imageNode: null,
-    showType: '',
     selectedShape: '',
   },
   reducers: {

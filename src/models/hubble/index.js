@@ -56,6 +56,16 @@ export default {
     ],
     showModal: false,
     showEdition: false,
+
+    // canvas所需字段
+    image: null,
+    stageNode: null,
+    layerNode: null,
+    currentShape: null,
+    imageHeight: 0,
+    imageNode: null,
+    selectedShape: '',
+    imgArr: [],
   },
   reducers: {
     stateWillUpdate(state, { payload }) {
