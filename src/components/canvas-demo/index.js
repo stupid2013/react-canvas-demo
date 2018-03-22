@@ -151,6 +151,15 @@ class MyCanvas extends React.Component {
 
     group.add(anchor);
   }
+  move = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'canvas/stateWillUpdate',
+      payload: {
+        selectedShape: 'move',
+      },
+    });
+  }
   addRect = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -272,8 +281,12 @@ class MyCanvas extends React.Component {
         stageNode.draw();
       }
     }
-    if (stageNode && (selectedShape === 'add-rect' || selectedShape === 'add-arrow' || selectedShape === 'add-note')) {
-      stageNode.off('contentMousedown').on('contentMousedown', (e) => {
+
+    // stageNode && (selectedShape === 'add-rect' ||
+    // selectedShape === 'add-arrow' || selectedShape === 'add-note')
+    // 这是之前的判断条件。。。不能这么玩儿！记得一会儿记录在readme里。。。
+    if (stageNode) {
+      stageNode.off('mousedown').on('mousedown', (e) => {
         if (currentShape === null) {
           const evt = e.evt;
           const startX = evt.layerX;
@@ -447,12 +460,25 @@ class MyCanvas extends React.Component {
         });
       });
     }
+    if (stageNode) {
+      const img = stageNode.find('.image')[0];
+      if (selectedShape !== 'move') {
+        img.setAttrs({
+          draggable: false,
+        });
+      } else {
+        img.setAttrs({
+          draggable: true,
+        });
+      }
+    }
     return (
       <div className={styles.wrapper}>
         <div className={styles.operation_bar}>
-          <Icon type="file-add" data-type="add-rect" onClick={this.addRect} className={`${(selectedShape === 'add-rect') && styles.active}`} style={{ cursor: 'pointer' }} />
-          <Icon type="arrow-down" data-type="add-arrow" onClick={this.addArrow} className={`${(selectedShape === 'add-arrow') && styles.active}`} style={{ cursor: 'pointer' }} />
-          <Icon type="edit" data-type="add-note" onClick={this.addNote} className={`${(selectedShape === 'add-note') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="pushpin-o" onClick={this.move} className={`${(selectedShape === 'move') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="file-add" onClick={this.addRect} className={`${(selectedShape === 'add-rect') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="arrow-down" onClick={this.addArrow} className={`${(selectedShape === 'add-arrow') && styles.active}`} style={{ cursor: 'pointer' }} />
+          <Icon type="edit" onClick={this.addNote} className={`${(selectedShape === 'add-note') && styles.active}`} style={{ cursor: 'pointer' }} />
           <Popconfirm title="确认清空？" onConfirm={this.clearLayer} okText="确认" cancelText="取消">
             <Icon type="reload" style={{ cursor: 'pointer' }} />
           </Popconfirm>
