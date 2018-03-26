@@ -10,7 +10,7 @@
     "install-node": "6.9.2"
   },
   "dependencies": {
-    "antd": "2.11.1",
+    "antd": "^3.3.3",
     "babel-plugin-import": "^1.6.5",
     "babel-runtime": "^6.9.2",
     "dva": "^1.2.1",
