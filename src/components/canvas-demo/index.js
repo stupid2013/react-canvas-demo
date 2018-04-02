@@ -505,6 +505,7 @@ class MyCanvas extends React.Component {
                 imageHeight={imageHeight}
                 imageNode={imageNode}
                 selectedShape={selectedShape}
+                stageNode={stageNode}
               />
             </Layer>
             <Layer ref={this.getLayerInstance} />

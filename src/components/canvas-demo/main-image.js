@@ -31,7 +31,18 @@ class MainImage extends React.Component {
     });
   }
   render() {
-    const { image, imageHeight, imageNode } = this.props;
+    const { image, imageHeight, imageNode, stageNode } = this.props;
+    if (stageNode && imageNode) {
+      stageNode.on('mouseover', () => { // 鼠标在画布上时
+        imageNode.on('wheel', (e) => { // 滚动图片
+          imageNode.move({
+            // x: e.evt.deltaX,
+            y: e.evt.deltaY,  // 上下滚动
+          });
+          stageNode.batchDraw();
+        });
+      });
+    }
     return (
       <Image
         image={image}
