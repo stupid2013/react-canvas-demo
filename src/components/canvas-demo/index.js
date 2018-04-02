@@ -284,7 +284,7 @@ class MyCanvas extends React.Component {
 
     // stageNode && (selectedShape === 'add-rect' ||
     // selectedShape === 'add-arrow' || selectedShape === 'add-note')
-    // 这是之前的判断条件。。。不能这么玩儿！记得一会儿记录在readme里。。。
+    // 这是之前的判断条件。。。不能这么玩儿！
     if (stageNode) {
       stageNode.off('mousedown').on('mousedown', (e) => {
         if (currentShape === null) {
