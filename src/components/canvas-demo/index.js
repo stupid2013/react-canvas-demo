@@ -97,13 +97,20 @@ class MyCanvas extends React.Component {
       const width = topRight.getX() - topLeft.getX();
       const height = bottomLeft.getY() - topLeft.getY();
       if (width && height) {
-        shape.width(width);
-        shape.height(height);
         if (shap === 'Tag') {
+          if (width > 0 && height > 0) {
+            shape.width(width);
+            shape.height(height);
+          }
           const text = group.get('Text')[0];
           text.position(topLeft.position());
-          text.width(width);
-          text.height(height);
+          if (width > 0 && height > 0) {
+            text.width(width);
+            text.height(height);
+          }
+        } else {
+          shape.width(width);
+          shape.height(height);
         }
       }
     }
