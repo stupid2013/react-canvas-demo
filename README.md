@@ -1,7 +1,9 @@
 # react-canvas-demo
 
 step1: clone git@github.com:stupid2013/react-canvas-demo.git
+
 step2: yarn
+
 step3: yarn start
 
 基于dva和konva的一个canvas编辑图片的demo
