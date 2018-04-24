@@ -3,6 +3,7 @@ import { Image } from 'react-konva';
 
 /* eslint no-undef: 0 */
 /* eslint no-unneeded-ternary: 0 */
+/* eslint no-param-reassign: 0 */
 class MainImage extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
@@ -33,14 +34,13 @@ class MainImage extends React.Component {
   render() {
     const { image, imageHeight, imageNode, stageNode } = this.props;
     if (stageNode && imageNode) {
-      stageNode.on('mouseover', () => { // 鼠标在画布上时
-        imageNode.on('wheel', (e) => { // 滚动图片
-          imageNode.move({
-            // x: e.evt.deltaX,
-            y: e.evt.deltaY,  // 上下滚动
-          });
-          stageNode.batchDraw();
+      stageNode.on('wheel', (e) => { // 滚动图片
+        e.cancelBubble = true;
+        imageNode.move({
+          // x: e.evt.deltaX,
+          y: e.evt.deltaY,  // 上下滚动
         });
+        stageNode.batchDraw();
       });
     }
     return (
